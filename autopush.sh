@@ -2,7 +2,7 @@
 set -euo pipefail
 
 # Repository to update
-REPO_DIR="$HOME/Documents/Github/End4_custom_hypr_config"
+REPO_DIR="$HOME/Github/End4_custom_hypr_config"
 
 # Edit this list to add/remove folders you want copied from $HOME into the repo.
 # Paths are relative to $HOME.
@@ -24,7 +24,6 @@ relpath_to_source() {
   local source_rel="$1"
   local target_rel="$2"
 
-  # Return a path relative to the source root if target is inside the source root.
   case "$target_rel" in
   "$source_rel")
     printf '.\n'
@@ -64,7 +63,6 @@ sync_one_path() {
     log "Syncing directory: $rel_path"
     rsync -a --delete "${rsync_excludes[@]}" "$src/" "$dst/"
   else
-    # File support, in case you add a file path later.
     for ex in "${EXCLUDE_PATHS[@]}"; do
       if [[ "$ex" == "$rel_path" ]]; then
         log "Skipping excluded file: $rel_path"
@@ -74,6 +72,31 @@ sync_one_path() {
     log "Copying file: $rel_path"
     cp -a "$src" "$dst"
   fi
+}
+
+choose_commit_message() {
+  echo "Choose commit message option:"
+  echo "1) Automatic (timestamp)"
+  echo "2) Custom message"
+  read -rp "Enter choice [1/2]: " choice
+
+  case "$choice" in
+  1 | "")
+    echo "Sync dotfiles $(date '+%Y-%m-%d %H:%M:%S')"
+    ;;
+  2)
+    read -rp "Enter your commit message: " custom_msg
+    if [[ -z "$custom_msg" ]]; then
+      echo "Sync dotfiles $(date '+%Y-%m-%d %H:%M:%S')"
+    else
+      echo "$custom_msg"
+    fi
+    ;;
+  *)
+    echo "Invalid choice, using automatic message."
+    echo "Sync dotfiles $(date '+%Y-%m-%d %H:%M:%S')"
+    ;;
+  esac
 }
 
 main() {
@@ -93,7 +116,7 @@ main() {
   if git diff --cached --quiet; then
     log "No changes to commit."
   else
-    commit_msg="Sync dotfiles $(date '+%Y-%m-%d %H:%M:%S')"
+    commit_msg="$(choose_commit_message)"
     git commit -m "$commit_msg"
     log "Committed changes: $commit_msg"
   fi
