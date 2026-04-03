@@ -115,8 +115,12 @@ main() {
     exit 0
   }
 
-  git push origin "$current_branch"
-  log "Pushed to origin/$current_branch"
+  if git diff --quiet HEAD origin/"$current_branch"; then
+    log "No changes to push."
+  else
+    git push origin "$current_branch"
+    log "Pushed to origin/$current_branch"
+  fi
 }
 
 main "$@"
