@@ -12,6 +12,7 @@ fi
 # Edit this list to add/remove folders you want copied from $HOME into the repo.
 SYNC_PATHS=(
   ".config/hypr/custom"
+  ".config/nvim/lua/plugins"
 )
 
 # Edit this list to add/remove files or folders you want excluded.
