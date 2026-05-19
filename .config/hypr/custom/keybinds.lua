@@ -87,6 +87,14 @@ local function cycle_layout(layouts)
 			layout = layouts[next_index],
 		},
 	})
+
+	local next_layout = layouts[next_index]
+
+	hl.notification.create({
+		text = "Layout: " .. next_layout,
+		duration = 2000,
+		icon = "info",
+	})
 end
 
 local function state_path_for(addr)
@@ -371,8 +379,8 @@ rebind("SUPER + Comma", layout_bind("master", "cyclenext noloop"))
 rebind("SUPER + Period", layout_bind("master", "cycleprev noloop"))
 bind("SUPER + SHIFT + Comma", layout_bind("master", "swapprev noloop"))
 bind("SUPER + SHIFT + Period", layout_bind("master", "swapnext noloop"))
-bind("SUPER + ALT + Comma", layout_bind("master", "rollnext"))
-bind("SUPER + ALT + Period", layout_bind("master", "rollprev"))
+bind("SUPER + ALT + Comma", layout_bind("master", "rollprev"))
+bind("SUPER + ALT + Period", layout_bind("master", "rollnext"))
 bind("SUPER + Semicolon", layout_bind("master", "mfact -0.05"))
 bind("SUPER + Apostrophe", layout_bind("master", "mfact +0.05"))
 bind("SUPER + Space", layout_bind("master", "orientationcycle"), "Window: [m] Cycle orientation")

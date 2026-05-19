@@ -26,6 +26,7 @@ end
 hl.config({
 	general = {
 		layout = "scrolling",
+		gaps_in = 8,
 	},
 	decoration = {
 		blur = {
