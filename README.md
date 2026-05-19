@@ -7,12 +7,12 @@ These configurations extend the original setup with:
 
 - Custom window rules and layouts
 - Personalized keybindings
-- Bash scripts for automation
+- (Some) scripts for automation
 - Extended .config directory (e.g. nvim)
 
 [NOTE]
 
-This is a personal configuration, so expect opinionated choices.
+This is an EXTREMELY PERSONAL configuration, so expect opinionated choices.
 
 Feel free to adapt anything to your own workflow.
 
