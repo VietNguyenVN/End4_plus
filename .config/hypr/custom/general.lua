@@ -37,8 +37,9 @@ hl.config({
 		follow_mouse = 0,
 	},
 	scrolling = {
+		fullscreen_on_one_column = false,
 		column_width = 1,
-		-- explicit_column_widths = 0.5, 1.0,
+		-- explicit_column_widths = "0.5, 1.0",
 		direction = "down",
 	},
 	master = {

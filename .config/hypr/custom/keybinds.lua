@@ -283,7 +283,6 @@ hl.config({ input = { kb_options = "fkeys:basic_13-24" } })
 bind_cmd("SUPER + SHIFT + Q", "pkill -9 -f $(hyprctl activewindow -j | jq -r .class)")
 bind_global("CTRL + ALT + Backspace", "quickshell:sessionToggle")
 bind_cmd("SUPER + ALT + L", "loginctl lock-session")
-hl.unbind("SUPER + L")
 
 -- =============================================================================
 -- Keybinds: apps
@@ -408,10 +407,16 @@ bind("ALT + TAB", layout_bind("monocle", "cyclenext"))
 
 bind("SUPER + Period", layout_bind("scrolling", "focus u"), "Window: [s] Move view (u)")
 bind("SUPER + Comma", layout_bind("scrolling", "focus d"), "Window: [s] Move view (d)")
-bind("SUPER + SHIFT + Period", layout_bind("scrolling", "colresize +0.1"))
-bind("SUPER + SHIFT + Comma", layout_bind("scrolling", "colresize -0.1"))
+bind("SUPER + SHIFT + Period", layout_bind("scrolling", "consume_or_expel prev"))
+bind("SUPER + SHIFT + Comma", layout_bind("scrolling", "consume_or_expel next"))
 bind("SUPER + ALT + Comma", layout_bind("scrolling", "swapcol r"))
 bind("SUPER + ALT + Period", layout_bind("scrolling", "swapcol l"))
+
+bind("SUPER + Semicolon", layout_bind("scrolling", "colresize +0.1"))
+bind("SUPER + Apostrophe", layout_bind("scrolling", "colresize -0.1"))
+
+bind("SUPER + SHIFT + BracketLeft", hl.dsp.window.move({ direction = "l" }))
+bind("SUPER + SHIFT + BracketRight", hl.dsp.window.move({ direction = "r" }))
 
 rebind("SUPER + mouse_up", layout_bind("scrolling", "focus d"))
 rebind("SUPER + mouse_down", layout_bind("scrolling", "focus u"))

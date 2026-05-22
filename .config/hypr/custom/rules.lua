@@ -1,12 +1,10 @@
 local window_rules = {
-	-- Uncomment to apply global transparency to all windows:
 	{
 		match = {
 			class = ".*",
 		},
 		opacity = "0.89 override 0.89 override",
 	},
-	-- Enable blur for every window
 	{
 		match = {
 			class = ".*",
