@@ -346,7 +346,7 @@ bind("SUPER + ALT + P", toggle_refresh, "Misc: Change refresh rate")
 bind_cmd("SUPER + U", "kitty ~/.config/hypr/custom/scripts/printdotscommits.sh", "Misc: Check dots-hyprland commits")
 bind_cmd("SUPER + SHIFT + U", "kitty ~/.config/hypr/custom/scripts/updatedots.sh", "Misc: Update dots-hyprland")
 bind_cmd("SUPER + Y", "kitty ~/.config/hypr/custom/scripts/archstatusprint.sh", "Misc: Check Archstatus")
-bind_cmd("SUPER + SHIFT + Y", "kitty ~/.config/hypr/custom/scripts/updatesystem.sh", "Misc: Update system")
+bind_cmd("SUPER + SHIFT + Y", "kitty sh -c 'topgrade && cachy-update'", "Misc: Update system")
 
 -- =============================================================================
 -- Keybinds: floating

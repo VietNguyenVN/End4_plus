@@ -8,6 +8,7 @@ for _, item in ipairs({
 	{ "SDL_IM_MODULE", "fcitx" },
 	{ "GLFW_IM_MODULE", "ibus" },
 	{ "INPUT_METHOD", "fcitx" },
+	{ "EDITOR", "nvim" },
 }) do
 	set_env(item[1], item[2])
 end
@@ -26,6 +27,5 @@ hl.permission({ binary = "fcitx5-lotus-server", type = "keyboard", mode = "allow
 -- https://wiki.archlinux.org/title/Category:Text_editors
 -- for example: vi nano nvim ...
 
-set_env("EDITOR", "nvim")
 -- set_env("XCURSOR_THEME", "Bibata-Modern-Classic")
 -- set_env("XCURSOR_SIZE", "24")
