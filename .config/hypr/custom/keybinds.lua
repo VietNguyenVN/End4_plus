@@ -283,6 +283,7 @@ hl.config({ input = { kb_options = "fkeys:basic_13-24" } })
 bind_cmd("SUPER + SHIFT + Q", "pkill -9 -f $(hyprctl activewindow -j | jq -r .class)")
 bind_global("CTRL + ALT + Backspace", "quickshell:sessionToggle")
 bind_cmd("SUPER + ALT + L", "loginctl lock-session")
+hl.unbind("SUPER + L")
 
 -- =============================================================================
 -- Keybinds: apps
@@ -294,6 +295,7 @@ bind_cmd("SUPER + SHIFT + O", "obsidian", "App: Obsidian")
 
 rebind_cmd("SUPER + X", "kitty nvim")
 rebind_cmd("SUPER + C", "papers", "App: Document Viewer")
+rebind_cmd("SUPER + Return", "[float; size 960 600; center] kitty")
 
 -- Special workspace toggles
 rebind(
@@ -318,7 +320,7 @@ rebind(
 
 rebind("CTRL + SHIFT + Escape", toggle_special_term(WS.btop, "btop", "kitty btop"))
 
--- IME
+-- Fcitx5
 bind("SUPER + Backslash", function()
 	local handle = io.popen("pgrep -x fcitx5 >/dev/null && echo 1 || echo 0")
 	if not handle then
@@ -330,7 +332,7 @@ bind("SUPER + Backslash", function()
 end, "App: Toggle fcitx5")
 
 -- =============================================================================
--- Keybinds: shell / UI
+-- Keybinds: shell
 -- =============================================================================
 
 bind_cmd("SUPER + ALT + D", "~/.config/hypr/custom/scripts/toggledock.sh", "Shell: Toggle dock")
@@ -348,9 +350,9 @@ bind_cmd("SUPER + Y", "kitty ~/.config/hypr/custom/scripts/archstatusprint.sh", 
 bind_cmd("SUPER + SHIFT + Y", "kitty sh -c 'topgrade && cachy-update'", "Misc: Update system")
 
 -- =============================================================================
--- Keybinds: floating
+-- Keybinds: misc
 -- =============================================================================
-
+-- Floating
 rebind("SUPER + ALT + Space", function()
 	local win = hl.get_active_window()
 	if not win or not win.address then
@@ -358,6 +360,63 @@ rebind("SUPER + ALT + Space", function()
 	end
 	cycle_floating_size(win)
 end)
+
+-- Adjust workspace gapps
+local GAP_STATE = XDG_RUNTIME_DIR .. "/hypr_gaps_out"
+
+local function current_gap()
+	local f = io.open(GAP_STATE, "r")
+	if not f then
+		return 40
+	end
+
+	local value = tonumber(f:read("*a"))
+	f:close()
+
+	return value or 40
+end
+
+local function set_gap(value)
+	value = math.max(0, value)
+
+	local f = io.open(GAP_STATE, "w")
+	if f then
+		f:write(tostring(value))
+		f:close()
+	end
+
+	local rules_path = HOME .. "/.config/hypr/custom/rules.lua"
+	local content = read_file(rules_path)
+
+	-- update both workspace rules
+	content = content:gsub("gaps_out = %d+", function()
+		local first = value
+		value = value + 20 -- second rule keeps +20 spacing
+		return "gaps_out = " .. first
+	end, 2)
+
+	write_file(rules_path, content)
+
+	hl.exec_cmd("hyprctl reload")
+
+	hl.notification.create({
+		text = "Workspace gaps: " .. tostring(current_gap()),
+		duration = 1500,
+		icon = "info",
+	})
+end
+
+local function adjust_gap(delta)
+	set_gap(current_gap() + delta)
+end
+
+rebind("SUPER + ALT + Equal", function()
+	adjust_gap(5)
+end, "Misc: Increase gaps_out")
+
+rebind("SUPER + ALT + Minus", function()
+	adjust_gap(-5)
+end, "Workspace: Decrease gaps_out")
 
 -- =============================================================================
 -- Keybinds: layout cycling
@@ -438,3 +497,4 @@ fullscreen_kitty_app(
 )
 fullscreen_kitty_app("unimatrix", "unimatrix", "SUPER + SHIFT + Backslash")
 fullscreen_kitty_app("vis", "vis", "CTRL + SUPER + Backslash")
+fullscreen_kitty_app("terminal-rain", "terminal-rain", "CTRL + ALT + Backslash")
