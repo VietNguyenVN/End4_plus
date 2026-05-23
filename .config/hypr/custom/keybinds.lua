@@ -362,61 +362,70 @@ rebind("SUPER + ALT + Space", function()
 end)
 
 -- Adjust workspace gapps
-local GAP_STATE = XDG_RUNTIME_DIR .. "/hypr_gaps_out"
+local RULES_PATH = HOME .. "/.config/hypr/custom/rules.lua"
+local GAP_OUT_STEP = 5
+local GAP_IN_STEP = 1
+local GAP_OUT_OFFSET = 20
 
-local function current_gap()
-	local f = io.open(GAP_STATE, "r")
-	if not f then
-		return 40
-	end
+local function current_workspace_gaps()
+	local src = read_file(RULES_PATH)
 
-	local value = tonumber(f:read("*a"))
-	f:close()
+	local gaps_out = tonumber(src:match('workspace%s*=%s*"s%[false%]".-gaps_out%s*=%s*(%d+)'))
+	local gaps_in = tonumber(src:match('workspace%s*=%s*"s%[false%]".-gaps_in%s*=%s*(%d+)'))
 
-	return value or 40
+	return gaps_out or 40, gaps_in or 8
 end
 
-local function set_gap(value)
-	value = math.max(0, value)
+local function set_workspace_gaps(base_out, base_in)
+	local src = read_file(RULES_PATH)
+	local second_out = base_out + GAP_OUT_OFFSET
 
-	local f = io.open(GAP_STATE, "w")
-	if f then
-		f:write(tostring(value))
-		f:close()
-	end
-
-	local rules_path = HOME .. "/.config/hypr/custom/rules.lua"
-	local content = read_file(rules_path)
-
-	-- update both workspace rules
-	content = content:gsub("gaps_out = %d+", function()
-		local first = value
-		value = value + 20 -- second rule keeps +20 spacing
-		return "gaps_out = " .. first
+	local out_count = 0
+	src = src:gsub("gaps_out%s*=%s*%d+", function()
+		out_count = out_count + 1
+		if out_count == 1 then
+			return "gaps_out = " .. base_out
+		end
+		return "gaps_out = " .. second_out
 	end, 2)
 
-	write_file(rules_path, content)
+	src = src:gsub("gaps_in%s*=%s*%d+", function()
+		return "gaps_in = " .. base_in
+	end, 2)
 
-	hl.exec_cmd("hyprctl reload")
-
+	write_file(RULES_PATH, src)
 	hl.notification.create({
-		text = "Workspace gaps: " .. tostring(current_gap()),
+		text = string.format("gaps_out: %d/%d   gaps_in: %d", base_out, second_out, base_in),
 		duration = 1500,
 		icon = "info",
 	})
 end
 
-local function adjust_gap(delta)
-	set_gap(current_gap() + delta)
+local function adjust_gaps_out(delta)
+	local base_out, base_in = current_workspace_gaps()
+	set_workspace_gaps(math.max(0, base_out + delta), base_in)
+end
+
+local function adjust_gaps_in(delta)
+	local base_out, base_in = current_workspace_gaps()
+	set_workspace_gaps(base_out, math.max(0, base_in + delta))
 end
 
 rebind("SUPER + ALT + Equal", function()
-	adjust_gap(5)
+	adjust_gaps_out(GAP_OUT_STEP)
 end, "Misc: Increase gaps_out")
 
 rebind("SUPER + ALT + Minus", function()
-	adjust_gap(-5)
-end, "Workspace: Decrease gaps_out")
+	adjust_gaps_out(-GAP_OUT_STEP)
+end, "Misc: Decrease gaps_out")
+
+rebind("SUPER + CTRL + Equal", function()
+	adjust_gaps_in(GAP_IN_STEP)
+end, "Misc: Increase gaps_in")
+
+bind("SUPER + CTRL + Minus", function()
+	adjust_gaps_in(-GAP_IN_STEP)
+end, "Misc: Decrease gaps_in")
 
 -- =============================================================================
 -- Keybinds: layout cycling

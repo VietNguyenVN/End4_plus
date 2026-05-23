@@ -29,10 +29,12 @@ local workspace_rules = {
 	{
 		workspace = "s[false]",
 		gaps_out = 40,
+		gaps_in = 8,
 	},
 	{
 		workspace = "s[true]",
 		gaps_out = 60,
+		gaps_in = 8,
 	},
 }
 

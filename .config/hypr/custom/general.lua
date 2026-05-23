@@ -26,7 +26,7 @@ end
 hl.config({
 	general = {
 		layout = "scrolling",
-		gaps_in = 8,
+		-- gaps_in = 8,
 		-- col = { active_border = "#06a5db" },
 	},
 	decoration = {
