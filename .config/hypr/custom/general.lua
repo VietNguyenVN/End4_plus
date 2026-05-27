@@ -26,8 +26,8 @@ end
 hl.config({
 	general = {
 		layout = "scrolling",
-		-- gaps_in = 8,
-		-- col = { active_border = "#06a5db" },
+		-- border_size = 3,
+		-- col = { active_border = "#acbdc7" },
 	},
 	decoration = {
 		blur = {
