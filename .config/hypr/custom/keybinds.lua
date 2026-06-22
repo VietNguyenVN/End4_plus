@@ -290,11 +290,12 @@ hl.unbind("SUPER + L")
 -- =============================================================================
 
 bind_cmd("SUPER + SHIFT + E", "[float; size 960 600; center] dolphin")
-bind_cmd("SUPER + SHIFT + W", "firefox --private-window")
+bind_cmd("SUPER + SHIFT + W", "zen-browser --private-window")
 bind_cmd("SUPER + SHIFT + O", "obsidian", "App: Obsidian")
 
 rebind_cmd("SUPER + X", "kitty nvim")
 rebind_cmd("SUPER + C", "papers", "App: Document Viewer")
+rebind_cmd("SUPER + SHIFT + T", "[float; size 960 600; center] kitty")
 rebind_cmd("SUPER + Return", "[float; size 960 600; center] kitty")
 
 -- Special workspace toggles
@@ -496,7 +497,7 @@ rebind("CTRL + SUPER + mouse_up", layout_bind("scrolling", "colresize -0.1"))
 rebind("CTRL + SUPER + mouse_down", layout_bind("scrolling", "colresize +0.1"))
 
 -- =============================================================================
--- Fullscreen kitty toys (window rules auto-registered)
+-- Fullscreen screensaver
 -- =============================================================================
 
 fullscreen_kitty_app(

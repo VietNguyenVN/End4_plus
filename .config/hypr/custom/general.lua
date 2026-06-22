@@ -1,6 +1,6 @@
 -- Put general config stuff here
 
-local refresh = 60
+local refresh = 120
 
 local monitors = {
 	{
