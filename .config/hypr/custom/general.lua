@@ -72,12 +72,12 @@ hl.animation({
 hl.animation({
 	leaf = "windowsMove",
 	enabled = true,
-	speed = 3.5,
+	speed = 3.2,
 	bezier = "standard",
 })
 hl.animation({
 	leaf = "fadeOut",
 	enabled = true,
-	speed = 1.5,
+	speed = 1.2,
 	bezier = "emphasizedAccel",
 })
