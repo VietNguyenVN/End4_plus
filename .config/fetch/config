@@ -1,0 +1,35 @@
+# fields — list to show, in this order
+# remove or comment out to hide
+os
+host
+kernel
+uptime
+packages
+shell
+display
+wm
+theme
+icons
+font
+terminal
+cpu
+gpu
+memory
+swap
+disk
+ip
+battery
+locale
+colors
+
+# appearance
+label_color=green
+# separator=─           (character for the title separator)
+# shading=.,-~:;=!*#$@  (characters for 3D shading, supports UTF-8)
+
+# 3d
+# light=top-left        (top-left, top-right, top, left, right, front, bottom-left, bottom-right)
+# spin=xy               (x, y, or xy)
+# speed=1.0             (rotation speed)
+# size=1.0              (logo scale, e.g. 2.0 for double size)
+# height=36             (override render height in rows)
