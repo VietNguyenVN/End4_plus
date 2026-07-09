@@ -296,7 +296,7 @@ bind_cmd("SUPER + SHIFT + O", "obsidian", "App: Obsidian")
 rebind_cmd("SUPER + X", "kitty nvim")
 rebind_cmd("SUPER + C", "papers", "App: Document Viewer")
 rebind_cmd("SUPER + SHIFT + T", "[float; size 1300 800; center] kitty")
-rebind_cmd("SUPER + Return", "[float; size 1300 800; center] kitty")
+rebind_cmd("SUPER + Return", "[float; size 1300 800; center] kitty fish -c 'fastfetch; exec fish'")
 
 -- Special workspace toggles
 rebind(
@@ -508,3 +508,4 @@ fullscreen_kitty_app(
 fullscreen_kitty_app("unimatrix", "unimatrix", "SUPER + SHIFT + Backslash")
 fullscreen_kitty_app("vis", "vis", "CTRL + SUPER + Backslash")
 fullscreen_kitty_app("terminal-rain", "terminal-rain", "CTRL + ALT + Backslash")
+fullscreen_kitty_app("fetch", "fetch", "CTRL + SHIFT + Backslash")
