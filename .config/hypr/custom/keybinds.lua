@@ -508,4 +508,4 @@ fullscreen_kitty_app(
 fullscreen_kitty_app("unimatrix", "unimatrix", "SUPER + SHIFT + Backslash")
 fullscreen_kitty_app("vis", "vis", "CTRL + SUPER + Backslash")
 fullscreen_kitty_app("terminal-rain", "terminal-rain", "CTRL + ALT + Backslash")
-fullscreen_kitty_app("fetch", "fetch", "CTRL + SHIFT + Backslash")
+fullscreen_kitty_app("fetch", "fetch", "SUPER + ALT + Return")
