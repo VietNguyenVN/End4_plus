@@ -18,11 +18,11 @@ local FLOAT_SIZES = {
 	{ 1600, 1000 }, -- large
 }
 
--- Named special workspaces — single source of truth
+-- Named special workspaces
 local WS = {
-	vesktop = "special:1",
-	btop = "special:3",
-	spotify = "special:4",
+	vesktop = "special:vesktop",
+	btop = "special:btop",
+	spotify = "special:spotify",
 }
 
 local COPILOT_KEY = "SUPER + SHIFT + F23"

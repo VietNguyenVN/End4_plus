@@ -15,13 +15,13 @@ local window_rules = {
 		match = {
 			class = "vesktop",
 		},
-		workspace = "special:1",
+		workspace = "special:vesktop",
 	},
 	{
 		match = {
 			class = "spotify",
 		},
-		workspace = "special:4",
+		workspace = "special:spotify",
 	},
 }
 

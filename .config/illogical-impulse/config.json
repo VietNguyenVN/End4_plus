@@ -80,7 +80,7 @@
             "workspaceZoom": 1
         },
         "thumbnailPath": "/home/vietnguyenx/.config/hypr/custom/scripts/mpvpaper_thumbnails/Interstellar Gargantua  black hole 4K live wallpaper for free windows 7⧸8⧸10⧸11 [gU4vSEZwiyE].mp4.jpg",
-        "wallpaperPath": "/home/vietnguyenx/Pictures/Wallpapers/0379.png",
+        "wallpaperPath": "/home/vietnguyenx/Pictures/Wallpapers/0141.png",
         "widgets": {
             "clock": {
                 "cookie": {
@@ -120,7 +120,7 @@
                 "style": "digital",
                 "styleLocked": "digital",
                 "x": 221.5,
-                "y": 392.75003250924976
+                "y": 404
             },
             "weather": {
                 "enable": false,
