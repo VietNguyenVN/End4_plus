@@ -18,13 +18,6 @@ local FLOAT_SIZES = {
 	{ 1600, 1000 }, -- large
 }
 
--- Named special workspaces
-local WS = {
-	vesktop = "special:vesktop",
-	btop = "special:btop",
-	spotify = "special:spotify",
-}
-
 local COPILOT_KEY = "SUPER + SHIFT + F23"
 
 -- =============================================================================
@@ -302,7 +295,7 @@ rebind_cmd("SUPER + Return", "[float; size 1300 800; center] kitty fish -c 'fast
 rebind(
 	"SUPER + O",
 	toggle_special_app({
-		workspace = WS.vesktop,
+		workspace = "special:vesktop",
 		command = "vesktop",
 		class = "vesktop",
 	}),
@@ -312,14 +305,14 @@ rebind(
 rebind(
 	"SUPER + A",
 	toggle_special_app({
-		workspace = WS.spotify,
+		workspace = "special:spotify",
 		command = "spotify-launcher",
 		class = "spotify",
 	}),
 	"App: Spotify"
 )
 
-rebind("CTRL + SHIFT + Escape", toggle_special_term(WS.btop, "btop", "kitty btop"))
+rebind("CTRL + SHIFT + Escape", toggle_special_term("special:btop", "btop", "kitty btop"))
 
 -- Fcitx5
 bind("SUPER + Backslash", function()
@@ -440,17 +433,14 @@ bind("CTRL + " .. COPILOT_KEY, function()
 end, "Misc: !CYCLE LAYOUT (TILED)")
 
 -- =============================================================================
--- Keybinds: layout-specific — Dwindle
+-- Layout keybinds
 -- =============================================================================
-
+-- Dwindle
 rebind("SUPER + J", layout_bind("dwindle", "togglesplit"))
 rebind("SUPER + Semicolon", layout_bind("dwindle", "splitratio -0.1"))
 rebind("SUPER + Apostrophe", layout_bind("dwindle", "splitratio +0.1"))
 
--- =============================================================================
--- Keybinds: layout-specific — Master
--- =============================================================================
-
+-- Master
 bind("SUPER + J", layout_bind("master", "swapwithmaster"))
 bind("SUPER + SHIFT + J", layout_bind("master", "addmaster"))
 bind("SUPER + SHIFT + K", layout_bind("master", "removemaster"))
@@ -464,16 +454,10 @@ bind("SUPER + Semicolon", layout_bind("master", "mfact -0.05"))
 bind("SUPER + Apostrophe", layout_bind("master", "mfact +0.05"))
 bind("SUPER + Space", layout_bind("master", "orientationcycle"), "Window: [m] Cycle orientation")
 
--- =============================================================================
--- Keybinds: layout-specific — Monocle
--- =============================================================================
-
+-- Monocle
 bind("ALT + TAB", layout_bind("monocle", "cyclenext"))
 
--- =============================================================================
--- Keybinds: layout-specific — Scrolling
--- =============================================================================
-
+-- Scrolling
 bind("SUPER + Period", layout_bind("scrolling", "focus u"), "Window: [s] Move view (u)")
 bind("SUPER + Comma", layout_bind("scrolling", "focus d"), "Window: [s] Move view (d)")
 bind("SUPER + SHIFT + Period", layout_bind("scrolling", "consume_or_expel prev"))
