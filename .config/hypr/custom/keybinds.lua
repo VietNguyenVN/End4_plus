@@ -282,7 +282,7 @@ hl.unbind("SUPER + L")
 -- Keybinds: apps
 -- =============================================================================
 
-bind_cmd("SUPER + SHIFT + E", "[float; size 960 600; center] dolphin")
+bind_cmd("SUPER + SHIFT + E", "[float; size 1300 800; center] dolphin")
 bind_cmd("SUPER + SHIFT + W", "zen-browser --private-window")
 bind_cmd("SUPER + SHIFT + O", "obsidian", "App: Obsidian")
 
