@@ -24,20 +24,10 @@ for _, monitor in ipairs(monitors) do
 	hl.monitor(monitor)
 end
 
--- Layout & Misc
 hl.config({
+	-- Scrolling
 	general = {
 		layout = "scrolling",
-		-- border_size = 3,
-		-- col = { active_border = "#acbdc7" },
-	},
-	decoration = {
-		blur = {
-			xray = false,
-		},
-	},
-	input = {
-		follow_mouse = 0,
 	},
 	scrolling = {
 		fullscreen_on_one_column = false,
@@ -45,8 +35,18 @@ hl.config({
 		-- explicit_column_widths = "0.5, 1.0",
 		direction = "down",
 	},
+	-- Master
 	master = {
 		new_status = "inherit",
+	},
+	-- Misc
+	decoration = {
+		blur = {
+			xray = false,
+		},
+	},
+	input = {
+		follow_mouse = 0,
 	},
 })
 
