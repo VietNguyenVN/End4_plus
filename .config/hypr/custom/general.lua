@@ -82,20 +82,15 @@ hl.animation({
 	bezier = "emphasizedAccel",
 })
 
--- Scrolling overview plugin
+-- Scrollingoverview plugin
 hl.config({
 	plugin = {
 		scrolloverview = {
-			gesture_distance = 300, -- how far is the "max" for the gesture
-			scale = 0.7, -- preferred overview scale
-			workspace_gap = 100,
+			scale = 0.6, -- preferred overview scale
+			workspace_gap = 60,
 			layout = "horizontal", -- vertical or horizontal
-			wallpaper = 2, -- 0: global only, 1: per-workspace only, 2: both
-			blur = true, -- blur only the main overview wallpaper
-
 			shadow = {
-				enabled = true,
-				range = 50,
+				enabled = false,
 			},
 		},
 	},
