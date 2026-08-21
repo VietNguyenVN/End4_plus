@@ -81,3 +81,26 @@ hl.animation({
 	speed = 1.2,
 	bezier = "emphasizedAccel",
 })
+
+-- Scrolling overview plugin
+hl.config({
+	plugin = {
+		scrolloverview = {
+			gesture_distance = 300, -- how far is the "max" for the gesture
+			scale = 0.7, -- preferred overview scale
+			workspace_gap = 100,
+			layout = "horizontal", -- vertical or horizontal
+			wallpaper = 2, -- 0: global only, 1: per-workspace only, 2: both
+			blur = true, -- blur only the main overview wallpaper
+
+			shadow = {
+				enabled = true,
+				range = 50,
+			},
+		},
+	},
+})
+
+hl.bind("SUPER + Backspace", function()
+	hl.plugin.scrolloverview.overview("toggle all")
+end)
