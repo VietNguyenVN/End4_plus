@@ -53,34 +53,11 @@ hl.config({
 -- hl.animation({ leaf = "workspaces", enabled = true, speed = 7, bezier = "menu_decel", style = "slidevert" })
 
 -- Window animations
-hl.curve("standard", {
-	type = "bezier",
-	points = { { 0.2, 0 }, { 0, 1 } },
-})
-hl.animation({
-	leaf = "windowsIn",
-	enabled = true,
-	speed = 2,
-	bezier = "emphasizedDecel",
-})
-hl.animation({
-	leaf = "windowsOut",
-	enabled = true,
-	speed = 2,
-	bezier = "emphasizedAccel",
-})
-hl.animation({
-	leaf = "windowsMove",
-	enabled = true,
-	speed = 3.2,
-	bezier = "standard",
-})
-hl.animation({
-	leaf = "fadeOut",
-	enabled = true,
-	speed = 1.2,
-	bezier = "emphasizedAccel",
-})
+hl.curve("standard", { type = "bezier", points = { { 0.2, 0 }, { 0, 1 } } })
+hl.animation({ leaf = "windowsIn", enabled = true, speed = 2, bezier = "emphasizedDecel" })
+hl.animation({ leaf = "windowsOut", enabled = true, speed = 2, bezier = "emphasizedAccel" })
+hl.animation({ leaf = "windowsMove", enabled = true, speed = 3.2, bezier = "standard" })
+hl.animation({ leaf = "fadeOut", enabled = true, speed = 1.2, bezier = "emphasizedAccel" })
 
 -- Scrollingoverview plugin
 hl.config({
@@ -96,6 +73,4 @@ hl.config({
 	},
 })
 
-hl.bind("SUPER + Backspace", function()
-	hl.plugin.scrolloverview.overview("toggle all")
-end)
+hl.bind("SUPER + Backspace", hl.plugin.scrolloverview.overview("toggle all"))
