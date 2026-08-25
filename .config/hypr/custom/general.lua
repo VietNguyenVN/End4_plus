@@ -73,4 +73,4 @@ hl.config({
 	},
 })
 
-hl.bind("SUPER + Backspace", hl.plugin.scrolloverview.overview("toggle all"))
+hl.bind("SUPER + Backspace", hl.plugin.scrolloverview.overview("toggle"))
