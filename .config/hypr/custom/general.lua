@@ -1,29 +1,5 @@
 -- Put general config stuff here
 
--- Monitor refresh rate
-local refresh = 120
-
-local monitors = {
-	{
-		output = "eDP-1",
-		mode = string.format("1920x1200@%d", refresh),
-		position = "auto",
-		scale = 1,
-		transform = 0,
-	},
-	{
-		output = "DP-1",
-		mode = "1920x1200@60",
-		position = "1920x0",
-		scale = 1,
-		mirror = "eDP-1",
-	},
-}
-
-for _, monitor in ipairs(monitors) do
-	hl.monitor(monitor)
-end
-
 hl.config({
 	-- Scrolling
 	general = {
@@ -50,6 +26,14 @@ hl.config({
 	},
 })
 
+for i = 1, 10 do
+	hl.workspace_rule({ workspace = tostring(i), monitor = "DP-2", default = true })
+end
+
+for i = 11, 20 do
+	hl.workspace_rule({ workspace = tostring(i), monitor = "HDMI-A-1", default = true })
+end
+
 -- hl.animation({ leaf = "workspaces", enabled = true, speed = 7, bezier = "menu_decel", style = "slidevert" })
 
 -- Window animations
@@ -73,4 +57,4 @@ hl.config({
 	},
 })
 
-hl.bind("SUPER + Backspace", hl.plugin.scrolloverview.overview("toggle all"))
+hl.bind("SUPER + Backspace", hl.plugin.scrolloverview.overview("toggle"))

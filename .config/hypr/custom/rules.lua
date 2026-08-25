@@ -22,6 +22,7 @@ local window_rules = {
 			class = "spotify",
 		},
 		workspace = "special:spotify",
+		monitor = "HDMI-A-1",
 	},
 }
 
