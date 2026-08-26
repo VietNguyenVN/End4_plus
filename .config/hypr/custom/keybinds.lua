@@ -474,7 +474,7 @@ end, "Misc: Decrease gaps_in")
 bind("SUPER + Z", function()
 	cycle_layout({ "scrolling", "monocle" })
 end, "Misc: !CYCLE LAYOUT")
-bind("CTRL + Z", function()
+bind("CTRL + SUPER + Z", function()
 	cycle_layout({ "dwindle", "master" })
 end, "Misc: !CYCLE LAYOUT (TILED)")
 

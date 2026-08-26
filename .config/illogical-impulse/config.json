@@ -382,7 +382,8 @@
             "org.kde.dolphin",
             "spotify",
             "vesktop",
-            "firefox"
+            "firefox",
+            "md.obsidian.obsidian"
         ],
         "pinnedOnStartup": false,
         "showAppsButton": true,
