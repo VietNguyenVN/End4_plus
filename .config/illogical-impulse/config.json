@@ -75,7 +75,7 @@
         "centeredWallpaperOnlyWhenLocked": true,
         "centeredWallpaperShape": "Circle",
         "centeredWallpaperSize": 400,
-        "enableWallpaperPreview": true,
+        "enableWallpaperPreview": false,
         "hideWhenFullscreen": true,
         "lockWall": "/home/vietnguyenx/Pictures/Wallpapers/0265.png",
         "parallax": {
@@ -89,8 +89,11 @@
         "screenList": [
             "HDMI-A-1"
         ],
+        "showBlur": true,
         "showGrid": true,
         "showSnapLines": true,
+        "splitRatio": "25",
+        "splitSide": "right",
         "thumbnailPath": "/home/vietnguyenx/.config/hypr/custom/scripts/mpvpaper_thumbnails/Interstellar Gargantua  black hole 4K live wallpaper for free windows 7⧸8⧸10⧸11 [gU4vSEZwiyE].mp4.jpg",
         "wallpaperAnimation": "",
         "wallpaperPath": "/home/vietnguyenx/Pictures/Wallpapers/0272.jpg",
@@ -214,17 +217,19 @@
             },
             "weather": {
                 "enable": true,
+                "expanded": false,
                 "placementStrategy": "free",
                 "sizeMode": "1x3",
                 "x": 276,
                 "y": 564
             },
             "worldClock": {
+                "clockCount": 4,
                 "enable": true,
                 "placementStrategy": "free",
                 "sizeMode": "2x2",
                 "timezones": [
-                    "Australia/Sydney",
+                    "Europe/Paris",
                     "Asia/Tokyo",
                     "Europe/London",
                     "America/New_York"
@@ -233,7 +238,7 @@
                 "y": 192
             }
         },
-        "widgetsLocked": false
+        "widgetsLocked": true
     },
     "bar": {
         "autoHide": {

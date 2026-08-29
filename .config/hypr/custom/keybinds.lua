@@ -13,9 +13,9 @@ local TMP_PREFIX = XDG_RUNTIME_DIR .. "/hypr_float_cycle_state-"
 -- =============================================================================
 
 local FLOAT_SIZES = {
-	{ 960, 600 }, -- small
-	{ 1280, 800 }, -- medium
-	{ 1600, 1000 }, -- large
+	{ 1300, 800 }, -- small
+	{ 1600, 900 }, -- medium
+	{ 1900, 1000 }, -- large
 }
 
 -- local COPILOT_KEY = "SUPER + SHIFT + F23"
