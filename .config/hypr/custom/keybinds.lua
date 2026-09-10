@@ -229,6 +229,40 @@ local function fullscreen_kitty_app(class, command, key)
 	hl.window_rule({ match = { class = class }, fullscreen = true })
 end
 
+-- Focus an existing matching window, switching to its workspace, or launch if none exists
+local function focus_or_launch(classes, command)
+	return function()
+		for _, win in ipairs(hl.get_windows()) do
+			local class = (win.class or ""):lower()
+			if classes[class] then
+				hl.dispatch(hl.dsp.focus({ window = win }))
+				return
+			end
+		end
+
+		hl.exec_cmd(command)
+	end
+end
+
+-- Same thing. but for zen-browser private sessions
+local function focus_or_launch_zen(private)
+	return function()
+		for _, win in ipairs(hl.get_windows()) do
+			local class = (win.class or ""):lower()
+			local title = (win.title or ""):lower()
+			local is_zen = class == "zen" or class == "zen-browser"
+			local is_private = title:find("private browsing", 1, true) ~= nil
+
+			if is_zen and is_private == private then
+				hl.dispatch(hl.dsp.focus({ window = win }))
+				return
+			end
+		end
+
+		hl.exec_cmd(private and "zen-browser --private-window" or "zen-browser --new-window")
+	end
+end
+
 -- =============================================================================
 -- Refresh rate toggle
 -- =============================================================================
@@ -283,9 +317,16 @@ hl.unbind("SUPER + L")
 -- =============================================================================
 
 bind_cmd("SUPER + SHIFT + E", "[float; size 1300 800; center] dolphin")
-bind_cmd("SUPER + SHIFT + W", "zen-browser --private-window")
-bind_cmd("SUPER + SHIFT + O", "obsidian", "App: Obsidian")
-
+rebind("SUPER + W", focus_or_launch_zen(false), "App: Focus or launch Zen")
+rebind("SUPER + SHIFT + W", focus_or_launch_zen(true), "App: Focus or launch private Zen")
+rebind(
+	"SUPER + SHIFT + O",
+	focus_or_launch({
+		["obsidian"] = true,
+		["md.obsidian.obsidian"] = true,
+	}, "obsidian"),
+	"App: Focus or launch Obsidian"
+)
 rebind_cmd("SUPER + X", "kitty nvim")
 rebind_cmd("SUPER + C", "papers", "App: Document Viewer")
 rebind_cmd("SUPER + SHIFT + T", "[float; size 1300 800; center] kitty")
