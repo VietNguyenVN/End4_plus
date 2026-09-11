@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
-OWNER="end-4"
-REPO="dots-hyprland"
+OWNER="pctrade"
+REPO="end4-pC"
 BRANCH="main"
 GITHUB_TOKEN="${GITHUB_TOKEN:-}"
 API_URL="https://api.github.com/repos/${OWNER}/${REPO}/commits?sha=${BRANCH}&per_page=20"
@@ -12,7 +12,7 @@ CYAN="\033[1;36m"
 GREEN="\033[1;32m"
 RESET="\033[0m"
 
-echo "==> end-4 / dots-hyprland — commits page"
+echo "==> pctrade / end4-pC — commits page"
 echo ""
 
 # Convert ISO date -> short relative ("2h", "3d", etc)

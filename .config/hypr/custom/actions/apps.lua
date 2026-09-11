@@ -1,30 +1,74 @@
 -- App actions return callbacks for key registration.
 local function toggle_special_app(opts)
 	local workspace = opts.workspace
-	local class_fragment = opts.class:lower()
+	local special_name = workspace:gsub("^special:", "")
+	local class_re = opts.class:lower()
+	local monitor = opts.monitor or "HDMI-A-1"
 
 	return function()
-		local active_ws = hl.get_active_workspace()
-		if active_ws and active_ws.name == workspace then
+		-- Make HDMI-A-1 the active monitor first.
+		hl.dispatch(hl.dsp.focus({
+			monitor = monitor,
+		}))
+
+		-- If this special workspace is currently visible on the
+		-- now-focused monitor, simply hide it.
+		local active_special = hl.get_active_special_workspace()
+		if active_special and active_special.name == workspace then
+			hl.dispatch(hl.dsp.workspace.toggle_special(special_name))
 			return
 		end
 
 		local target
+
 		for _, win in ipairs(hl.get_windows()) do
-			if win.class and win.class:lower():find(class_fragment, 1, true) then
+			if win.class and win.class:lower():find(class_re, 1, true) then
 				target = win
 				break
 			end
 		end
 
-		if not target then
-			hl.exec_cmd(opts.command, { workspace = workspace })
-		elseif not target.workspace or target.workspace.name ~= workspace then
-			hl.dispatch(hl.dsp.focus({ window = target }))
-			hl.dispatch(hl.dsp.move({ workspace = workspace }))
+		if target then
+			-- Ensure existing window belongs to its special workspace.
+			if not target.workspace or target.workspace.name ~= workspace then
+				hl.dispatch(hl.dsp.window.move({
+					window = target,
+					workspace = workspace,
+				}))
+			end
+		else
+			-- Launch it directly into the special workspace.
+			hl.exec_cmd(opts.command, {
+				workspace = workspace,
+				monitor = monitor,
+			})
 		end
 
-		hl.dispatch(hl.dsp.workspace.toggle_special(workspace:gsub("^special:", "")))
+		-- Show overlay on HDMI-A-1.
+		hl.dispatch(hl.dsp.workspace.toggle_special(special_name))
+
+		-- Find/focus the app.
+		for _, win in ipairs(hl.get_windows()) do
+			if win.class and win.class:lower():find(class_re, 1, true) then
+				target = win
+				break
+			end
+		end
+
+		if target then
+			hl.dispatch(hl.dsp.focus({
+				window = target,
+			}))
+
+			hl.exec_cmd([[
+		sh -c '
+			read x y <<EOF
+$(hyprctl activewindow -j | jq -r '"'"'[.at[0] + (.size[0] / 2 | floor), .at[1] + (.size[1] / 2 | floor)] | @tsv'"'"')
+EOF
+			hyprctl dispatch movecursor "$x" "$y"
+		'
+	]])
+		end
 	end
 end
 
