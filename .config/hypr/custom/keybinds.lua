@@ -229,7 +229,7 @@ local function fullscreen_kitty_app(class, command, key)
 	hl.window_rule({ match = { class = class }, fullscreen = true })
 end
 
--- Focus an existing matching window, switching to its workspace, or launch if none exists
+-- Focus an existing matching app/window, switching to its workspace, or launch if none exists
 local function focus_or_launch(classes, command)
 	return function()
 		for _, win in ipairs(hl.get_windows()) do
@@ -244,7 +244,7 @@ local function focus_or_launch(classes, command)
 	end
 end
 
--- Same thing. but for zen-browser private sessions
+-- Same thing, but separating zen-browser normal vs private sessions
 local function focus_or_launch_zen(private)
 	return function()
 		for _, win in ipairs(hl.get_windows()) do
@@ -317,15 +317,15 @@ hl.unbind("SUPER + L")
 -- =============================================================================
 
 bind_cmd("SUPER + SHIFT + E", "[float; size 1300 800; center] dolphin")
-rebind("SUPER + W", focus_or_launch_zen(false), "App: Focus or launch Zen")
-rebind("SUPER + SHIFT + W", focus_or_launch_zen(true), "App: Focus or launch private Zen")
+rebind("SUPER + W", focus_or_launch_zen(false), "App: Browser")
+rebind("SUPER + SHIFT + W", focus_or_launch_zen(true))
 rebind(
 	"SUPER + SHIFT + O",
 	focus_or_launch({
 		["obsidian"] = true,
 		["md.obsidian.obsidian"] = true,
 	}, "obsidian"),
-	"App: Focus or launch Obsidian"
+	"App: Obsidian"
 )
 rebind_cmd("SUPER + X", "kitty nvim")
 rebind_cmd("SUPER + C", "papers", "App: Document Viewer")
