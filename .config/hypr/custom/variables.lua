@@ -1,2 +1,2 @@
--- hyprlang noerror false
--- For all available variables, see ~/.config/hypr/hyprland/variables.conf
+-- Optional app overrides; loaded after hyprland/variables.lua.
+-- See that file for available globals such as terminal and browser.

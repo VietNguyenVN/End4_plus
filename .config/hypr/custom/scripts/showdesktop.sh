@@ -1,4 +1,4 @@
-#!/bin/env sh
+#!/usr/bin/env bash
 
 TMP_FILE="$XDG_RUNTIME_DIR/hyprland-show-desktop"
 
@@ -24,7 +24,7 @@ else
   do
     address=$(sed 's/"//g' <<< $address )
 
-    if [[ -n address ]]; then
+    if [[ -n "$address" ]]; then
       TMP_ADDRESS+="$address\n"
     fi
 
