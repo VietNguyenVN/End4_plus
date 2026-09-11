@@ -39,5 +39,5 @@ workspace, so other monitors/workspaces are unaffected and restoration survives
 config reloads. Open special workspaces are dismissed; pinned windows remain
 visible. Restoring moves only windows still in that holding workspace, leaving
 newly opened windows and windows manually moved elsewhere alone. Moving windows
-out and back can change their tiling order and focus. `scripts/showdesktop.sh`
-remains available as an entry point to the same action.
+out and back can change their tiling order and focus. The shortcut calls the Lua
+action directly.
