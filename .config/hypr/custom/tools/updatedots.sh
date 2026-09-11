@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+SCRIPT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)" || exit 1
 cd "$HOME/.cache/dots-hyprland/" || exit 1
 
 echo "==> Checking for updates..."
@@ -27,9 +28,9 @@ fi
 
 read -rp "==> Run postinstall.sh? [y/N] " ans
 if [[ "$ans" =~ ^[Yy]$ ]]; then
-  if [[ -x "$HOME/.config/hypr/custom/scripts/postinstall.sh" ]]; then
+  if [[ -x "$SCRIPT_DIR/postinstall.sh" ]]; then
     echo "==> Running postinstall.sh..."
-    "$HOME/.config/hypr/custom/scripts/postinstall.sh"
+    "$SCRIPT_DIR/postinstall.sh"
   else
     echo "==> No postinstall.sh found or not executable."
   fi

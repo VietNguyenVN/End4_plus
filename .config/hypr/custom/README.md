@@ -13,8 +13,15 @@ rule, and keybinding overrides. Environment overrides load earlier;
   effect when the configuration is reloaded. Special workspace outer gaps are
   always 20 pixels greater than normal workspace outer gaps.
 - `execs.lua`: startup commands.
-- `scripts/`: shell integrations and maintenance commands. The floating and
-  refresh scripts remain as compatibility entry points to the Lua actions.
+- `tools/`: standalone Bash maintenance tools, launched from Lua shortcuts.
+  `updatedots.sh` finds `postinstall.sh` alongside itself.
+- `scripts/`: only the externally generated wallpaper restoration script,
+  which the unchanged defaults still call.
+
+Fcitx5, dock, and clock toggles are Lua actions. The dock/clock action uses `jq`
+to transform Quickshell's JSON settings and writes the result atomically;
+fcitx5 uses `pgrep`/`pkill`. These external utilities remain dependencies, but
+the toggle logic no longer lives in Bash scripts.
 
 Keep shared layout bindings in their current order: the first `rebind` removes
 an inherited default, and later `bind` calls add layout-specific callbacks.
@@ -29,6 +36,15 @@ check that workspace's tiled layout, while `general.lua` defines the global defa
 Floating-size state is per window in `$XDG_RUNTIME_DIR` (falling back to `/tmp`),
 using a `v2` prefix and one-based indices. Old zero-based state files are ignored.
 
-`printdotscommits.sh` reads an optional `GITHUB_TOKEN` from its environment.
+`tools/printdotscommits.sh` reads an optional `GITHUB_TOKEN` from its environment.
 Without one it makes an unauthenticated request for the public repository.
 `__restore_video_wallpaper.sh` is generated externally; leave it intact.
+
+`SUPER + ALT + H` hides/restores the focused regular workspace's unpinned
+windows. Each workspace has its own reserved `special:show-desktop-<id>` holding
+workspace, so other monitors/workspaces are unaffected and restoration survives
+config reloads. Open special workspaces are dismissed; pinned windows remain
+visible. Restoring moves only windows still in that holding workspace, leaving
+newly opened windows and windows manually moved elsewhere alone. Moving windows
+out and back can change their tiling order and focus. The shortcut calls the Lua
+action directly.
