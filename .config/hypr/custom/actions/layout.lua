@@ -1,11 +1,11 @@
-local function current_layout_name()
-	local current = hl.get_config("general.layout")
-	return type(current) == "table" and current.name or current
+local function active_workspace()
+	return hl.get_active_special_workspace() or hl.get_active_workspace()
 end
 
 local function layout_bind(layout_name, cmd)
 	return function()
-		if current_layout_name() ~= layout_name then
+		local workspace = active_workspace()
+		if not workspace or workspace.tiled_layout ~= layout_name then
 			return
 		end
 		hl.dispatch(hl.dsp.layout(cmd))
@@ -13,17 +13,25 @@ local function layout_bind(layout_name, cmd)
 end
 
 local function cycle_layout(layouts)
-	local current = current_layout_name()
+	local workspace = active_workspace()
+	if not workspace or #layouts == 0 then
+		return
+	end
+
+	-- Switching between cycle groups starts at the first layout in that group.
 	local next_index = 1
 
 	for i, layout in ipairs(layouts) do
-		if layout == current then
+		if layout == workspace.tiled_layout then
 			next_index = (i % #layouts) + 1
 			break
 		end
 	end
 
-	hl.config({ general = { layout = layouts[next_index] } })
+	hl.workspace_rule({
+		workspace = tostring(workspace.special and workspace.name or workspace.id),
+		layout = layouts[next_index],
+	})
 	hl.notification.create({
 		text = "Layout: " .. layouts[next_index],
 		duration = 2000,

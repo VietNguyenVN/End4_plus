@@ -21,6 +21,11 @@ an inherited default, and later `bind` calls add layout-specific callbacks.
 App helper functions return callbacks; requiring an action module registers no
 shortcuts or startup commands.
 
+Layout cycling changes only the active workspace, preferring an open special
+workspace. The existing cycle groups remain scrolling/monocle and dwindle/master;
+switching groups selects the first layout in the group. Layout-specific shortcuts
+check that workspace's tiled layout, while `general.lua` defines the global default.
+
 Floating-size state is per window in `$XDG_RUNTIME_DIR` (falling back to `/tmp`),
 using a `v2` prefix and one-based indices. Old zero-based state files are ignored.
 
