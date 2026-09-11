@@ -22,20 +22,6 @@ local window_rules = {
 			class = "spotify",
 		},
 		workspace = "special:spotify",
-		monitor = "HDMI-A-1",
-	},
-}
-
-local workspace_rules = {
-	{
-		workspace = "s[false]",
-		gaps_out = 40,
-		gaps_in = 8,
-	},
-	{
-		workspace = "s[true]",
-		gaps_out = 60,
-		gaps_in = 8,
 	},
 }
 
@@ -43,6 +29,4 @@ for _, rule in ipairs(window_rules) do
 	hl.window_rule(rule)
 end
 
-for _, rule in ipairs(workspace_rules) do
-	hl.workspace_rule(rule)
-end
+require("custom.actions.display").apply_gaps()

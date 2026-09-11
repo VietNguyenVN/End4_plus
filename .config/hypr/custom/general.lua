@@ -1,5 +1,3 @@
--- Put general config stuff here
-
 hl.config({
 	-- Scrolling
 	general = {
@@ -15,7 +13,7 @@ hl.config({
 	master = {
 		new_status = "inherit",
 	},
-	-- Misc
+	-- Appearance and input
 	decoration = {
 		blur = {
 			xray = false,
@@ -23,6 +21,7 @@ hl.config({
 	},
 	input = {
 		follow_mouse = 0,
+		kb_options = "fkeys:basic_13-24",
 	},
 })
 
@@ -56,5 +55,3 @@ hl.config({
 		},
 	},
 })
-
-hl.bind("SUPER + Backspace", hl.plugin.scrolloverview.overview("toggle"))

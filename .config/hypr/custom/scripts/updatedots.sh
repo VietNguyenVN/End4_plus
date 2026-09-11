@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-cd ~/.cache/dots-hyprland/
+cd "$HOME/.cache/dots-hyprland/" || exit 1
 
 echo "==> Checking for updates..."
 git fetch
@@ -17,12 +17,12 @@ if [[ -n "$NEW_COMMITS" ]]; then
     echo "==> Skipping git pull."
   fi
 
-  read -rp "==> Run ./install.sh? [y/N] " ans
-  [[ "$ans" =~ ^[Yy]$ ]] && ./setup install || echo "==> Skipping install.sh."
+  read -rp "==> Run ./setup install? [y/N] " ans
+  [[ "$ans" =~ ^[Yy]$ ]] && ./setup install || echo "==> Skipping setup install."
 else
   echo "==> Already up to date."
-  read -rp "==> Run ./install.sh anyway? [y/N] " ans
-  [[ "$ans" =~ ^[Yy]$ ]] && ./setup install || echo "==> Skipping install.sh."
+  read -rp "==> Run ./setup install anyway? [y/N] " ans
+  [[ "$ans" =~ ^[Yy]$ ]] && ./setup install || echo "==> Skipping setup install."
 fi
 
 read -rp "==> Run postinstall.sh? [y/N] " ans
