@@ -70,22 +70,22 @@ local function focus_or_launch(classes, command)
 	end
 end
 
--- Same thing, but separating zen-browser normal vs private sessions
-local function focus_or_launch_zen(private)
+-- Same thing, but separating firefox-browser normal vs private sessions
+local function focus_or_launch_firefox(private)
 	return function()
 		for _, win in ipairs(hl.get_windows()) do
 			local class = (win.class or ""):lower()
 			local title = (win.title or ""):lower()
-			local is_zen = class == "zen" or class == "zen-browser"
+			local is_firefox = class == "firefox"
 			local is_private = title:find("private browsing", 1, true) ~= nil
 
-			if is_zen and is_private == private then
+			if is_firefox and is_private == private then
 				hl.dispatch(hl.dsp.focus({ window = win }))
 				return
 			end
 		end
 
-		hl.exec_cmd(private and "zen-browser --private-window" or "zen-browser --new-window")
+		hl.exec_cmd(private and "firefox --private-window" or "firefox --new-window")
 	end
 end
 
@@ -93,5 +93,5 @@ return {
 	toggle_special_app = toggle_special_app,
 	toggle_special_term = toggle_special_term,
 	focus_or_launch = focus_or_launch,
-	focus_or_launch_zen = focus_or_launch_zen,
+	focus_or_launch_firefox = focus_or_launch_firefox,
 }

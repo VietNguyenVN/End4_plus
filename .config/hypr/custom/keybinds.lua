@@ -49,8 +49,8 @@ hl.unbind("SUPER + L")
 -- =============================================================================
 
 bind_cmd("SUPER + SHIFT + E", "[float; size 1300 800; center] dolphin")
-rebind("SUPER + W", apps.focus_or_launch_zen(false), "App: Browser")
-rebind("SUPER + SHIFT + W", apps.focus_or_launch_zen(true))
+rebind("SUPER + W", apps.focus_or_launch_firefox(false), "App: Browser")
+rebind("SUPER + SHIFT + W", apps.focus_or_launch_firefox(true))
 rebind(
 	"SUPER + SHIFT + O",
 	apps.focus_or_launch({
@@ -207,3 +207,26 @@ fullscreen_kitty_app("fetch", "fetch", "SUPER + ALT + Return")
 
 -- Scrolling overview
 bind("SUPER + Backspace", hl.plugin.scrolloverview.overview("toggle"))
+
+-- =============================================================================
+-- End4-pC
+-- =============================================================================
+hl.bind("SUPER + I", hl.dsp.global("quickshell:settingsToggle"), { description = "Toggle settings" })
+rebind("SUPER + Tab", function()
+	local active = hl.get_active_monitor()
+	if not active then
+		return
+	end
+
+	local target
+
+	if active.name == "DP-2" then
+		target = "HDMI-A-1"
+	else
+		target = "DP-2"
+	end
+
+	hl.dispatch(hl.dsp.focus({
+		monitor = target,
+	}))
+end, "Monitor: Toggle focus")
