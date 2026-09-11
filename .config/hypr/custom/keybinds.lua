@@ -3,6 +3,7 @@ local desktop = require("custom.actions.desktop")
 local display = require("custom.actions.display")
 local floating = require("custom.actions.floating")
 local layout = require("custom.actions.layout")
+local shell = require("custom.actions.shell")
 
 local COPILOT_KEY = "SUPER + SHIFT + F23"
 
@@ -92,14 +93,14 @@ rebind(
 rebind("CTRL + SHIFT + Escape", apps.toggle_special_term("special:btop", "btop", "kitty btop"))
 
 -- Fcitx5
-bind_cmd("SUPER + Backslash", "~/.config/hypr/custom/scripts/togglefcitx5.sh", "App: Toggle fcitx5")
+bind("SUPER + Backslash", apps.toggle_fcitx5, "App: Toggle fcitx5")
 
 -- =============================================================================
 -- Keybinds: shell
 -- =============================================================================
 
-bind_cmd("SUPER + ALT + D", "~/.config/hypr/custom/scripts/toggledock.sh", "Shell: Toggle dock")
-bind_cmd("SUPER + ALT + K", "~/.config/hypr/custom/scripts/toggleclock.sh", "Shell: Toggle clock")
+bind("SUPER + ALT + D", shell.toggle_dock, "Shell: Toggle dock")
+bind("SUPER + ALT + K", shell.toggle_clock, "Shell: Toggle clock")
 bind_global("SUPER + ALT + J", "quickshell:barToggle", "Shell: Toggle bar")
 bind("SUPER + ALT + P", display.toggle_refresh, "Misc: Change refresh rate")
 
@@ -107,9 +108,9 @@ bind("SUPER + ALT + P", display.toggle_refresh, "Misc: Change refresh rate")
 -- Keybinds: scripts / maintenance
 -- =============================================================================
 
-bind_cmd("SUPER + U", "kitty ~/.config/hypr/custom/scripts/printdotscommits.sh", "Misc: Check dots-hyprland commits")
-bind_cmd("SUPER + SHIFT + U", "kitty ~/.config/hypr/custom/scripts/updatedots.sh", "Misc: Update dots-hyprland")
-bind_cmd("SUPER + Y", "kitty ~/.config/hypr/custom/scripts/archstatusprint.sh", "Misc: Check Archstatus")
+bind_cmd("SUPER + U", "kitty ~/.config/hypr/custom/tools/printdotscommits.sh", "Misc: Check dots-hyprland commits")
+bind_cmd("SUPER + SHIFT + U", "kitty ~/.config/hypr/custom/tools/updatedots.sh", "Misc: Update dots-hyprland")
+bind_cmd("SUPER + Y", "kitty ~/.config/hypr/custom/tools/archstatusprint.sh", "Misc: Check Archstatus")
 bind_cmd("SUPER + SHIFT + Y", "kitty sh -c 'topgrade && cachy-update'", "Misc: Update system")
 
 -- =============================================================================

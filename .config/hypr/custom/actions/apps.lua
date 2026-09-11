@@ -89,7 +89,22 @@ local function focus_or_launch_zen(private)
 	end
 end
 
+-- pgrep exits with 1 when no matching process exists; other failures are errors.
+local function toggle_fcitx5()
+	local process = assert(io.popen("pgrep -x fcitx5", "r"))
+	process:read("*a")
+	local running, reason, status = process:close()
+	if running then
+		hl.exec_cmd("pkill -x fcitx5")
+	elseif reason == "exit" and status == 1 then
+		hl.exec_cmd("fcitx5 -d")
+	else
+		hl.notification.create({ text = "Could not check fcitx5 process", duration = 3000, icon = "info" })
+	end
+end
+
 return {
+	toggle_fcitx5 = toggle_fcitx5,
 	toggle_special_app = toggle_special_app,
 	toggle_special_term = toggle_special_term,
 	focus_or_launch = focus_or_launch,
