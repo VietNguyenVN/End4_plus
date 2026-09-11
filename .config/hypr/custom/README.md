@@ -32,3 +32,12 @@ using a `v2` prefix and one-based indices. Old zero-based state files are ignore
 `printdotscommits.sh` reads an optional `GITHUB_TOKEN` from its environment.
 Without one it makes an unauthenticated request for the public repository.
 `__restore_video_wallpaper.sh` is generated externally; leave it intact.
+
+`SUPER + ALT + H` hides/restores the focused regular workspace's unpinned
+windows. Each workspace has its own reserved `special:show-desktop-<id>` holding
+workspace, so other monitors/workspaces are unaffected and restoration survives
+config reloads. Open special workspaces are dismissed; pinned windows remain
+visible. Restoring moves only windows still in that holding workspace, leaving
+newly opened windows and windows manually moved elsewhere alone. Moving windows
+out and back can change their tiling order and focus. `scripts/showdesktop.sh`
+remains available as an entry point to the same action.

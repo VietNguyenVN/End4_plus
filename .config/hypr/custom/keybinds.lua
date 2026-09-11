@@ -1,4 +1,5 @@
 local apps = require("custom.actions.apps")
+local desktop = require("custom.actions.desktop")
 local display = require("custom.actions.display")
 local floating = require("custom.actions.floating")
 local layout = require("custom.actions.layout")
@@ -45,6 +46,7 @@ bind_cmd("SUPER + SHIFT + Q", "pkill -9 -f $(hyprctl activewindow -j | jq -r .cl
 bind_global("CTRL + ALT + Backspace", "quickshell:sessionToggle")
 bind_cmd("SUPER + ALT + L", "loginctl lock-session")
 hl.unbind("SUPER + L")
+rebind("SUPER + ALT + H", desktop.toggle, "Workspace: Show desktop / restore windows")
 
 -- =============================================================================
 -- Keybinds: apps
