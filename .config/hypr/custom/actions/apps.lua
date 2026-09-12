@@ -89,14 +89,15 @@ local function focus_or_launch_zen(private)
 	end
 end
 
--- pgrep exits with 1 when no matching process exists; other failures are errors.
+-- Hyprland may reap the child before pipe:close(), so read pgrep's status
+-- through stdout. Exit 1 means no match; other nonzero values mean failure.
 local function toggle_fcitx5()
-	local process = assert(io.popen("pgrep -x fcitx5", "r"))
-	process:read("*a")
-	local running, reason, status = process:close()
-	if running then
+	local process = assert(io.popen('pgrep -x fcitx5 >/dev/null; printf "%s" "$?"', "r"))
+	local status = tonumber(process:read("*a"))
+	process:close()
+	if status == 0 then
 		hl.exec_cmd("pkill -x fcitx5")
-	elseif reason == "exit" and status == 1 then
+	elseif status == 1 then
 		hl.exec_cmd("fcitx5 -d")
 	else
 		hl.notification.create({ text = "Could not check fcitx5 process", duration = 3000, icon = "info" })
