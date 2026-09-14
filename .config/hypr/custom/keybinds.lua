@@ -47,7 +47,7 @@ bind_cmd("SUPER + SHIFT + Q", "pkill -9 -f $(hyprctl activewindow -j | jq -r .cl
 bind_global("CTRL + ALT + Backspace", "quickshell:sessionToggle")
 bind_cmd("SUPER + ALT + L", "loginctl lock-session")
 hl.unbind("SUPER + L")
-rebind("SUPER + ALT + H", desktop.toggle, "Workspace: Show desktop / restore windows")
+rebind("SUPER + ALT + H", desktop.toggle)
 
 -- =============================================================================
 -- Keybinds: apps
@@ -65,7 +65,8 @@ rebind(
 	"App: Obsidian"
 )
 rebind_cmd("SUPER + X", "kitty nvim")
-rebind_cmd("SUPER + C", "papers", "App: Document Viewer")
+rebind_cmd("SUPER + C", "kitty codex")
+bind_cmd("SUPER + ALT + C", "papers")
 rebind_cmd("SUPER + SHIFT + T", "[float; size 1300 800; center] kitty")
 rebind_cmd("SUPER + Return", "[float; size 1300 800; center] kitty fish -c 'fastfetch; exec fish'")
 
