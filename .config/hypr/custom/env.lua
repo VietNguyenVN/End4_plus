@@ -5,6 +5,7 @@ for _, item in ipairs({
 	{ "GLFW_IM_MODULE", "ibus" },
 	{ "INPUT_METHOD", "fcitx" },
 	{ "EDITOR", "nvim" },
+	{ "QSG_RHI_BACKEND", "vulkan" },
 }) do
 	hl.env(item[1], item[2])
 end
