@@ -5,7 +5,7 @@ It includes personalized layout tweaks, keybindings, and various utility scripts
 
 ## Video showcase
 
-https://github.com/VietNguyenVN/End4_plus/raw/refs/heads/main/assets/showcase.mp4
+https://github.com/user-attachments/assets/49c4bd63-1e22-40dd-95e0-bc4c3e90a520
 
 ## Features
 
