@@ -3,6 +3,14 @@
 This repository contains my Hyprland configurations for End-4 dotfiles.
 It includes personalized layout tweaks, keybindings, and various utility scripts.
 
+## Video showcase
+
+[![Preview of the End-4 Hyprland setup](assets/showcase.jpg)](https://github.com/VietNguyenVN/End4_plus/raw/refs/heads/main/assets/showcase.mp4)
+
+[Watch the video showcase](https://github.com/VietNguyenVN/End4_plus/raw/refs/heads/main/assets/showcase.mp4) (16 seconds).
+
+## Features
+
 These configurations extend the original setup with:
 
 - Custom window rules and layouts
