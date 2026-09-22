@@ -151,9 +151,9 @@
                 "showOnlyWhenLocked": false,
                 "style": "digital",
                 "styleLocked": "digital",
-                "x": 331.5,
-                "y": 234,
-                "z": 1
+                "x": 708,
+                "y": 780,
+                "z": 35
             },
             "customImage": {
                 "enable": true,
@@ -174,9 +174,9 @@
                 "fontSize": 75,
                 "placementStrategy": "free",
                 "shadow": true,
-                "x": 168,
-                "y": 444,
-                "z": 32
+                "x": 144,
+                "y": 372,
+                "z": 40
             },
             "images": {
                 "enable": false,
@@ -208,9 +208,9 @@
                 "enable": true,
                 "placementStrategy": "free",
                 "vertical": false,
-                "x": 1284,
-                "y": 696,
-                "z": 34
+                "x": 1332,
+                "y": 636,
+                "z": 37
             },
             "shadow": true,
             "sticker": {
@@ -255,7 +255,7 @@
                 "enable": true,
                 "height": 260,
                 "placementStrategy": "free",
-                "ringSize": 377,
+                "ringSize": 382,
                 "sensitivity": 1,
                 "style": "ring",
                 "x": 768,
@@ -267,9 +267,9 @@
                 "expanded": false,
                 "placementStrategy": "free",
                 "sizeMode": "2x3",
-                "x": 228,
-                "y": 636,
-                "z": 31
+                "x": 180,
+                "y": 540,
+                "z": 39
             },
             "worldClock": {
                 "clockCount": 3,
@@ -612,7 +612,7 @@
         "orderBottomUp": false,
         "orderRightLeft": false,
         "rows": 1,
-        "scale": 0.18,
+        "scale": 0.1,
         "style": "default"
     },
     "panelFamily": "ii",
