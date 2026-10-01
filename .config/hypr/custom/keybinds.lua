@@ -66,7 +66,7 @@ rebind(
 )
 rebind_cmd("SUPER + X", "kitty nvim")
 rebind_cmd("SUPER + C", "kitty codex")
-bind_cmd("SUPER + ALT + C", "papers")
+bind_cmd("SUPER + ALT + C", "chatgpt")
 rebind_cmd("SUPER + SHIFT + T", "[float; size 1300 800; center] kitty")
 rebind_cmd("SUPER + Return", "[float; size 1300 800; center] kitty fish -c 'fastfetch; exec fish'")
 
