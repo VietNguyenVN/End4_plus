@@ -1,4 +1,12 @@
 local window_rules = {
+	-- Keep restored app maximize requests from overriding the tiling layout.
+	-- Hyprland's maximize binding and app fullscreen requests still work.
+	{
+		match = {
+			class = ".*",
+		},
+		suppress_event = "maximize",
+	},
 	{
 		match = {
 			class = ".*",
