@@ -118,17 +118,17 @@ bind_cmd("SUPER + SHIFT + Y", "kitty sh -c 'topgrade && cachy-update'", "Misc: U
 -- Keybinds: misc
 -- =============================================================================
 -- Toggle blur, dimming and transparency together.
-local color_picking_rule = hl.window_rule({
-	name = "color-picking-opaque",
+local opaque_rule = hl.window_rule({
+	name = "visual-effects-opaque",
 	match = { class = ".*" },
 	opacity = "1 override 1 override 1 override",
 	force_rgbx = true,
 })
-color_picking_rule:set_enabled(false)
+opaque_rule:set_enabled(false)
 
 rebind("SUPER + Z", function()
 	local enabled = not hl.get_config("decoration.blur.enabled")
-	color_picking_rule:set_enabled(not enabled)
+	opaque_rule:set_enabled(not enabled)
 	hl.config({
 		decoration = {
 			blur = { enabled = enabled },
