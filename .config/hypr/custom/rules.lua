@@ -38,3 +38,8 @@ for _, rule in ipairs(window_rules) do
 end
 
 require("custom.actions.display").apply_gaps()
+
+-- App scratchpads fill their work area instead of taking a zscroll half-slot.
+for _, name in ipairs({ "vesktop", "spotify" }) do
+	hl.workspace_rule({ workspace = "special:" .. name, layout = "scrolling" })
+end

@@ -3,6 +3,7 @@ local desktop = require("custom.actions.desktop")
 local display = require("custom.actions.display")
 local floating = require("custom.actions.floating")
 local layout = require("custom.actions.layout")
+local zscroll = require("custom.layouts.zscroll")
 local shell = require("custom.actions.shell")
 
 local COPILOT_KEY = "SUPER + SHIFT + F23"
@@ -167,7 +168,7 @@ end, "Misc: Decrease gaps_in")
 -- =============================================================================
 
 bind(COPILOT_KEY, function()
-	layout.cycle({ "scrolling", "monocle" })
+	layout.cycle({ "scrolling", "lua:zscroll", "monocle" })
 end, "Misc: !CYCLE LAYOUT")
 bind("CTRL + " .. COPILOT_KEY, function()
 	layout.cycle({ "dwindle", "master" })
@@ -222,6 +223,22 @@ rebind("SUPER + ALT + mouse_up", layout.bind("scrolling", "swapcol l"))
 rebind("SUPER + ALT + mouse_down", layout.bind("scrolling", "swapcol r"))
 rebind("CTRL + SUPER + mouse_up", layout.bind("scrolling", "colresize -0.1"))
 rebind("CTRL + SUPER + mouse_down", layout.bind("scrolling", "colresize +0.1"))
+
+-- Z-scroll: row navigation and swaps without resizing.
+bind("SUPER + Comma", layout.bind("lua:zscroll", "focus d"))
+bind("SUPER + Period", layout.bind("lua:zscroll", "focus u"))
+bind("SUPER + SHIFT + Comma", layout.bind("lua:zscroll", "swap next"))
+bind("SUPER + SHIFT + Period", layout.bind("lua:zscroll", "swap prev"))
+bind("SUPER + ALT + Comma", layout.bind("lua:zscroll", "focus d"))
+bind("SUPER + ALT + Period", layout.bind("lua:zscroll", "focus u"))
+bind("SUPER + mouse_up", layout.bind("lua:zscroll", "focus d"))
+bind("SUPER + mouse_down", layout.bind("lua:zscroll", "focus u"))
+bind("SUPER + ALT + mouse_up", layout.bind("lua:zscroll", "swap u"))
+bind("SUPER + ALT + mouse_down", layout.bind("lua:zscroll", "swap d"))
+for key, direction in pairs({ Left = "l", Right = "r", Up = "u", Down = "d", BracketLeft = "l", BracketRight = "r" }) do
+	rebind("SUPER + " .. key, zscroll.direction("focus", direction))
+	rebind("SUPER + SHIFT + " .. key, zscroll.direction("swap", direction))
+end
 
 -- =============================================================================
 -- Fullscreen screensaver

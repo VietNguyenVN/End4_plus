@@ -29,9 +29,55 @@ App helper functions return callbacks; requiring an action module registers no
 shortcuts or startup commands.
 
 Layout cycling changes only the active workspace, preferring an open special
-workspace. The existing cycle groups remain scrolling/monocle and dwindle/master;
+workspace. The cycle groups are scrolling/lua:zscroll/monocle and dwindle/master;
 switching groups selects the first layout in the group. Layout-specific shortcuts
 check that workspace's tiled layout, while `general.lua` defines the global default.
+
+The `special:vesktop` and `special:spotify` scratchpads use `scrolling` so their apps
+fill the available width and height, respecting the existing special-workspace
+gaps. Their app toggle shortcuts remain the same.
+
+`layouts/zscroll.lua` registers the default `lua:zscroll` layout: a vertical tape
+of full-height rows, each containing two half-width windows in Z order. New
+windows append; closing or floating a window compacts the remaining pairs.
+An odd final window stays half-width on the left. The focused row fills the work
+area, with normal gaps, borders, and reserved panel space applied by Hyprland.
+Focus from keyboard shortcuts, clicking a neighboring row, or an external window
+switcher reveals that row. Newly opened tiled windows on the active workspace
+receive focus and bring their row into view; background workspace launches do
+not steal focus. Deferred updates use a new one-shot timer for each event burst
+(Hyprland destroys one-shot timers after they fire).
+Each workspace keeps its own row position while unfocused. Groups occupy one slot.
+Your outer gaps expose the neighboring rows above/below the focused row; clicking
+those visible strips selects that window and scrolls its pair into view. No extra
+preview padding is added: the visible strip depends on `gaps_out` and `gaps_in`.
+
+Z-scroll shortcuts:
+
+- `SUPER + Comma` / `Period`: next / previous two-window row, without wrapping;
+  retain the focused column where possible.
+- `SUPER + Arrow`: spatial focus; up/down retain the column where possible.
+- `SUPER + ALT + Comma` / `Period`: next / previous row.
+- `SUPER + SHIFT + Comma` / `Period`: swap with the next / previous window.
+- `SUPER + SHIFT + Arrow`: swap in that direction.
+- `SUPER + mouse_up` / `mouse_down`: next / previous row (existing scroll polarity).
+- `SUPER + ALT + mouse_up` / `mouse_down`: swap up / down.
+- Bracket keys behave like left/right arrows, including Shift for swapping.
+
+Z-scroll has fixed slot sizes; native scrolling's resize/consume messages do not
+apply. It uses Lua target placement and row transitions, not the native scrolling
+tape controller. Native scrolling gestures and scrolloverview integration are not
+implemented or verified for this layout. Standard fullscreen enter/exit is handled
+by Hyprland. Dragging uses the Lua layout adapter's native target ordering rather
+than arbitrary drop-to-cell placement. Vertically adjacent physical monitors may
+expose off-screen rows because this layout does not add viewport clipping.
+
+To revert the default, set `general.layout = "scrolling"` in `general.lua` and
+reload; to switch only the current workspace, use the existing layout cycle key
+(`SUPER + SHIFT + F23`). Run `lua custom/tests/zscroll.lua` from this directory's
+parent for geometry and navigation checks. The implementation was also checked
+on Hyprland 0.56.2 with five disposable windows for scrolling, swapping, fullscreen
+restore, and close/repacking behavior.
 
 Floating-size state is per window in `$XDG_RUNTIME_DIR` (falling back to `/tmp`),
 using a `v2` prefix and one-based indices. Old zero-based state files are ignored.

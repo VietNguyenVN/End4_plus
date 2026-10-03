@@ -1,5 +1,6 @@
 -- Overrides applied after hyprland/general.lua.
 local display = require("custom.actions.display")
+require("custom.layouts.zscroll")
 
 -- Monitor refresh rate
 local refresh = display.read_settings().refresh
@@ -28,7 +29,7 @@ end
 hl.config({
 	-- Scrolling
 	general = {
-		layout = "scrolling",
+		layout = "lua:zscroll",
 	},
 	scrolling = {
 		fullscreen_on_one_column = false,
@@ -74,4 +75,3 @@ hl.config({
 		},
 	},
 })
-
