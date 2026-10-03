@@ -4,6 +4,7 @@ local timers = {}
 local events, workspaces = {}, {}
 local ctx
 hl = {
+	notification = { create = function() end },
 	layout = { register = function(name, value)
 		assert(name == "zscroll")
 		provider = value
@@ -220,3 +221,14 @@ assert(not pcall(zscroll.configure, { windows_per_row = 0, center_single_window 
 assert(not pcall(zscroll.configure, { windows_per_row = 1.5, center_single_window = false }))
 assert(not pcall(zscroll.configure, { windows_per_row = 2, center_single_window = "yes" }))
 print("PASS: configurable row capacity, centered singletons, mixed rows, option validation")
+-- Runtime capacity changes clamp at one.
+zscroll.configure({ windows_per_row = 2, center_single_window = false })
+ctx = make_context(6, 4)
+active = ctx.targets[1].window
+message("capacity -1")
+assert(ctx.targets[1].box.w == 1001 and ctx.targets[2].box.y == 830)
+message("capacity -1")
+assert(ctx.targets[1].box.w == 1001)
+message("capacity +1")
+assert(ctx.targets[1].box.w == 500 and ctx.targets[2].box.y == 30)
+print("PASS: capacity shortcuts and minimum row capacity")

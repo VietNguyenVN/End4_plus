@@ -202,9 +202,9 @@ bind("SUPER + Space", layout.bind("master", "orientationcycle"), "Window: [m] Cy
 bind("ALT + TAB", layout.bind("monocle", "cyclenext"))
 
 -- Scrolling
-bind("SUPER + Period", layout.bind("scrolling", "focus u"), "Window: [s] Move view (u)")
-bind("SUPER + Comma", layout.bind("scrolling", "focus d"), "Window: [s] Move view (d)")
-bind("SUPER + SHIFT + Period", layout.bind("scrolling", "consume_or_expel prev"))
+bind("SUPER + Period", layout.bind("scrolling", "focus u"))
+bind("SUPER + Comma", layout.bind("scrolling", "focus d"))
+bind("SUPER + SHIFT + Period", layout.bind("scrolling"))
 bind("SUPER + SHIFT + Comma", layout.bind("scrolling", "consume_or_expel next"))
 bind("SUPER + ALT + Comma", layout.bind("scrolling", "swapcol r"))
 bind("SUPER + ALT + Period", layout.bind("scrolling", "swapcol l"))
@@ -224,7 +224,9 @@ rebind("SUPER + ALT + mouse_down", layout.bind("scrolling", "swapcol r"))
 rebind("CTRL + SUPER + mouse_up", layout.bind("scrolling", "colresize -0.1"))
 rebind("CTRL + SUPER + mouse_down", layout.bind("scrolling", "colresize +0.1"))
 
--- Z-scroll: row navigation and swaps without resizing.
+-- Z-scroll: row capacity, navigation, and swaps.
+bind("SUPER + Semicolon", layout.bind("lua:zscroll", "capacity -1"))
+bind("SUPER + Apostrophe", layout.bind("lua:zscroll", "capacity +1"))
 bind("SUPER + Comma", layout.bind("lua:zscroll", "focus d"))
 bind("SUPER + Period", layout.bind("lua:zscroll", "focus u"))
 bind("SUPER + SHIFT + Comma", layout.bind("lua:zscroll", "swap next"))

@@ -137,6 +137,15 @@ local function layout_msg(ctx, msg)
 	if msg == "refresh" then
 		return -- Hyprland calls recalculate after layout_msg returns.
 	end
+	local capacity_delta = msg:match("^capacity ([+-]1)$")
+	if capacity_delta then
+		M.configure({
+			windows_per_row = math.max(1, options.windows_per_row + tonumber(capacity_delta)),
+			center_single_window = options.center_single_window,
+		})
+		hl.notification.create({ text = "Z-scroll: " .. options.windows_per_row .. " windows per row", duration = 1500, icon = "info" })
+		return
+	end
 	local action, direction = msg:match("^(%S+)%s+(%S+)$")
 	if action ~= "focus" and action ~= "swap" then
 		return "zscroll: expected focus/swap next|prev|l|r|u|d, or refresh"

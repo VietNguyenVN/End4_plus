@@ -56,6 +56,10 @@ local zscroll_options = {
 
 Centering keeps the lone window's normal slot width. Other incomplete rows stay
 left-aligned, and tagged full-width windows still occupy a whole row.
+`SUPER + Semicolon` decreases `windows_per_row` (minimum 1), and
+`SUPER + Apostrophe` increases it while zscroll is active. This updates the shared
+runtime setting; other zscroll workspaces use it on their next layout update.
+Reloading restores the value in `general.lua`.
 
 For a full-width, full-height row in zscroll, add the `zscroll-full` tag through a
 normal window rule in `custom/rules.lua` (Hyprland regex matching):
@@ -87,12 +91,13 @@ Z-scroll shortcuts:
   for both zscroll and native scrolling.
 - `SUPER + ALT + mouse_up` / `mouse_down`: swap up / down.
 - Bracket keys behave like left/right arrows, including Shift for swapping.
+- `SUPER + Semicolon` / `Apostrophe`: decrease / increase windows per row.
 
 Keyboard/wheel focus navigation centers the pointer in the newly focused window
 after row placement. Clicking row previews keeps the pointer at the click position.
 
-Z-scroll has fixed slot sizes; native scrolling's resize/consume messages do not
-apply. It uses Lua target placement and row transitions, not the native scrolling
+Native scrolling's resize/consume messages do not apply to zscroll.
+It uses Lua target placement and row transitions, not the native scrolling
 tape controller. Native scrolling gestures and scrolloverview integration are not
 implemented or verified for this layout. Standard fullscreen enter/exit is handled
 by Hyprland. Dragging uses the Lua layout adapter's native target ordering rather
