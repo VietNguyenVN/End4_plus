@@ -35,7 +35,7 @@ hl = {
 		end end },
 	},
 }
-dofile("custom/layouts/zscroll.lua")
+local zscroll = dofile("custom/layouts/zscroll.lua")
 local function fire_timer()
 	assert(#timers == 1, "expected one pending refresh")
 	local callback = table.remove(timers, 1)
@@ -189,3 +189,34 @@ provider.recalculate(ctx)
 assert(ctx.targets[1].box.w == 1001)
 print("PASS: geometry, navigation, swaps, removal, workspaces, groups, repeated timers, new-window focus")
 print("PASS: mixed full-width rows, navigation, swaps, repacking, tagged groups")
+-- Configurable capacity, adjacent-column navigation, and singleton centering.
+zscroll.configure({ windows_per_row = 3, center_single_window = false })
+ctx = make_context(5, 7)
+active = ctx.targets[1].window
+provider.recalculate(ctx)
+assert(ctx.targets[1].box.w == 333 and ctx.targets[2].box.w == 334 and ctx.targets[3].box.w == 334)
+assert(ctx.targets[3].box.x + ctx.targets[3].box.w == 1021)
+message("focus r")
+assert(active == ctx.targets[2].window)
+message("focus r")
+assert(active == ctx.targets[3].window)
+message("focus d")
+assert(active == ctx.targets[6].window)
+message("focus d")
+assert(active == ctx.targets[7].window)
+assert(ctx.targets[7].box.x == 20 and ctx.targets[7].box.w == 333)
+zscroll.configure({ windows_per_row = 3, center_single_window = true })
+provider.recalculate(ctx)
+assert(ctx.targets[7].box.x == 354 and ctx.targets[7].box.w == 333)
+-- Center a singleton before a full-width row too; two of three slots stay left.
+ctx.targets[2].window.tags = { "zscroll-full" }
+provider.recalculate(ctx)
+assert(ctx.targets[1].box.x == 354 and ctx.targets[2].box.w == 1001)
+assert(ctx.targets[6].box.x == 20 and ctx.targets[7].box.x == 353)
+zscroll.configure({ windows_per_row = 1, center_single_window = true })
+provider.recalculate(ctx)
+for _, target in ipairs(ctx.targets) do assert(target.box.w == 1001 and target.box.x == 20) end
+assert(not pcall(zscroll.configure, { windows_per_row = 0, center_single_window = false }))
+assert(not pcall(zscroll.configure, { windows_per_row = 1.5, center_single_window = false }))
+assert(not pcall(zscroll.configure, { windows_per_row = 2, center_single_window = "yes" }))
+print("PASS: configurable row capacity, centered singletons, mixed rows, option validation")

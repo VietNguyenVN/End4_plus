@@ -1,8 +1,18 @@
--- Two half-width, full-height windows per row on a vertical tape.
+-- Configurable full-height window slots on a vertical tape.
 -- Hyprland owns target order; new targets append and removals compact it.
 local NAME = "lua:zscroll"
 local rows = {}
 local M = {}
+local pointer = require("custom.actions.pointer")
+local options = { windows_per_row = 2, center_single_window = false }
+
+function M.configure(settings)
+	local count = settings.windows_per_row
+	assert(type(count) == "number" and count >= 1 and count < math.huge and count == math.floor(count),
+		"zscroll.windows_per_row must be a positive integer")
+	assert(type(settings.center_single_window) == "boolean", "zscroll.center_single_window must be boolean")
+	options = { windows_per_row = count, center_single_window = settings.center_single_window }
+end
 
 local function workspace_of(ctx)
 	for _, target in ipairs(ctx.targets) do
@@ -74,7 +84,7 @@ local function pack(ctx)
 		local members = packed[open_row]
 		slots[i] = { row = open_row, column = #members, full = full }
 		members[#members + 1] = i
-		if full or #members == 2 then open_row = nil end
+		if full or #members == options.windows_per_row then open_row = nil end
 	end
 	return slots, packed
 end
@@ -88,13 +98,18 @@ local function recalculate(ctx)
 	row = math.max(1, math.min(row, #packed))
 	rows[workspace.id] = row
 	local area = ctx.area
-	local left_width = math.floor(area.w / 2)
 	for index, target in ipairs(ctx.targets) do
 		local slot = slots[index]
+		local left = math.floor(area.w * slot.column / options.windows_per_row)
+		local right = math.floor(area.w * (slot.column + 1) / options.windows_per_row)
+		local width = slot.full and area.w or right - left
+		if options.center_single_window and not slot.full and #packed[slot.row] == 1 then
+			left = math.floor((area.w - width) / 2)
+		end
 		target:place({
-			x = area.x + (slot.column == 1 and left_width or 0),
+			x = area.x + left,
 			y = area.y + (slot.row - row) * area.h,
-			w = slot.full and area.w or (slot.column == 0 and left_width or area.w - left_width),
+			w = width,
 			h = area.h,
 		})
 	end
@@ -109,12 +124,12 @@ local function destination(ctx, i, direction)
 	elseif direction == "prev" then
 		return math.max(i - 1, 1)
 	elseif direction == "l" then
-		return members[1]
+		return members[math.max(1, slot.column)]
 	elseif direction == "r" then
-		return members[#members]
+		return members[math.min(#members, slot.column + 2)]
 	elseif direction == "u" or direction == "d" then
 		local adjacent = packed[slot.row + (direction == "u" and -1 or 1)]
-		return adjacent and (adjacent[slot.column + 1] or adjacent[1]) or i
+		return adjacent and adjacent[math.min(#adjacent, slot.column + 1)] or i
 	end
 end
 
@@ -213,6 +228,10 @@ function M.direction(action, direction)
 			hl.dispatch(hl.dsp.focus({ direction = direction }))
 		else
 			hl.dispatch(hl.dsp.window.move({ direction = direction }))
+		end
+		if action == "focus" and workspace
+			and (workspace.tiled_layout == NAME or workspace.tiled_layout == "scrolling") then
+			pointer.center_after_navigation()
 		end
 	end
 end

@@ -1,3 +1,5 @@
+local pointer = require("custom.actions.pointer")
+
 local function active_workspace()
 	return hl.get_active_special_workspace() or hl.get_active_workspace()
 end
@@ -9,6 +11,10 @@ local function layout_bind(layout_name, cmd)
 			return
 		end
 		hl.dispatch(hl.dsp.layout(cmd))
+		if (layout_name == "scrolling" or layout_name == "lua:zscroll")
+			and (cmd:match("^focus ") or cmd:match("^swapcol ")) then
+			pointer.center_after_navigation()
+		end
 	end
 end
 

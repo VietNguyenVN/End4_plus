@@ -34,7 +34,7 @@ switching groups selects the first layout in the group. Layout-specific shortcut
 check that workspace's tiled layout, while `general.lua` defines the global default.
 
 `layouts/zscroll.lua` registers the `lua:zscroll` layout: a vertical tape
-of full-height rows, each containing two half-width windows in Z order. New
+of full-height rows, by default containing two half-width windows in Z order. New
 windows append; closing or floating a window compacts the remaining pairs.
 An odd final window stays half-width on the left. The focused row fills the work
 area, with normal gaps, borders, and reserved panel space applied by Hyprland.
@@ -44,6 +44,18 @@ receive focus and bring their row into view; background workspace launches do
 not steal focus. Deferred updates use a new one-shot timer for each event burst
 (Hyprland destroys one-shot timers after they fire).
 Each workspace keeps its own row position while unfocused. Groups occupy one slot.
+
+Edit `zscroll_options` near the top of `custom/general.lua` and reload to change:
+
+```lua
+local zscroll_options = {
+    windows_per_row = 2,          -- positive integer; each ordinary slot is 1/N wide
+    center_single_window = false, -- center a row with exactly one ordinary window
+}
+```
+
+Centering keeps the lone window's normal slot width. Other incomplete rows stay
+left-aligned, and tagged full-width windows still occupy a whole row.
 
 For a full-width, full-height row in zscroll, add the `zscroll-full` tag through a
 normal window rule in `custom/rules.lua` (Hyprland regex matching):
@@ -65,15 +77,19 @@ preview padding is added: the visible strip depends on `gaps_out` and `gaps_in`.
 
 Z-scroll shortcuts:
 
-- `SUPER + Comma` / `Period`: next / previous two-window row, without wrapping;
+- `SUPER + Comma` / `Period`: next / previous row, without wrapping;
   retain the focused column where possible.
 - `SUPER + Arrow`: spatial focus; up/down retain the column where possible.
 - `SUPER + ALT + Comma` / `Period`: next / previous row.
 - `SUPER + SHIFT + Comma` / `Period`: swap with the next / previous window.
 - `SUPER + SHIFT + Arrow`: swap in that direction.
-- `SUPER + mouse_up` / `mouse_down`: next / previous row (existing scroll polarity).
+- `SUPER + mouse_up` / `mouse_down`: previous / next row (up is up, down is down),
+  for both zscroll and native scrolling.
 - `SUPER + ALT + mouse_up` / `mouse_down`: swap up / down.
 - Bracket keys behave like left/right arrows, including Shift for swapping.
+
+Keyboard/wheel focus navigation centers the pointer in the newly focused window
+after row placement. Clicking row previews keeps the pointer at the click position.
 
 Z-scroll has fixed slot sizes; native scrolling's resize/consume messages do not
 apply. It uses Lua target placement and row transitions, not the native scrolling

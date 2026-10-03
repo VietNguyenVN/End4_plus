@@ -1,6 +1,12 @@
 -- Overrides applied after hyprland/general.lua.
 local display = require("custom.actions.display")
-require("custom.layouts.zscroll")
+
+-- Z-scroll slots remain full-height; lone windows keep their normal slot width.
+local zscroll_options = {
+	windows_per_row = 2,
+	center_single_window = false,
+}
+require("custom.layouts.zscroll").configure(zscroll_options)
 
 -- Monitor refresh rate
 local refresh = display.read_settings().refresh
