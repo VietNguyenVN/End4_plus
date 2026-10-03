@@ -33,11 +33,7 @@ workspace. The cycle groups are scrolling/lua:zscroll/monocle and dwindle/master
 switching groups selects the first layout in the group. Layout-specific shortcuts
 check that workspace's tiled layout, while `general.lua` defines the global default.
 
-The `special:vesktop` and `special:spotify` scratchpads use `scrolling` so their apps
-fill the available width and height, respecting the existing special-workspace
-gaps. Their app toggle shortcuts remain the same.
-
-`layouts/zscroll.lua` registers the default `lua:zscroll` layout: a vertical tape
+`layouts/zscroll.lua` registers the `lua:zscroll` layout: a vertical tape
 of full-height rows, each containing two half-width windows in Z order. New
 windows append; closing or floating a window compacts the remaining pairs.
 An odd final window stays half-width on the left. The focused row fills the work
@@ -53,11 +49,11 @@ For a full-width, full-height row in zscroll, add the `zscroll-full` tag through
 normal window rule in `custom/rules.lua` (Hyprland regex matching):
 
 ```lua
+-- Example
 { match = { class = "(?i)waydroid(\\..*)?" }, tag = "zscroll-full" },
 ```
 
-This rule is enabled for Waydroid and its `waydroid.*` app classes. Copy it and
-replace the class regex to give another app its own full-width row. Gaps and panels
+Copy it and replace the class regex to give another app its own full-width row. Gaps and panels
 are respected. A full-width window starts a new row and keeps target order; an
 unpaired ordinary window before it stays half-width. Pairing resumes after it.
 Up/down navigation moves by these mixed rows, and any tagged group member makes
@@ -87,7 +83,7 @@ by Hyprland. Dragging uses the Lua layout adapter's native target ordering rathe
 than arbitrary drop-to-cell placement. Vertically adjacent physical monitors may
 expose off-screen rows because this layout does not add viewport clipping.
 
-To revert the default, set `general.layout = "scrolling"` in `general.lua` and
+To change the default, set `general.layout = "[...]"` in `general.lua` and
 reload; to switch only the current workspace, use the existing layout cycle key
 (`SUPER + SHIFT + F23`). Run `lua custom/tests/zscroll.lua` from this directory's
 parent for geometry and navigation checks. The implementation was also checked
