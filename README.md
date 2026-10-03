@@ -18,18 +18,9 @@ https://github.com/user-attachments/assets/121a8c6f-5027-4235-b3d1-12acecdeb02b
   the remaining pairs. An odd final window stays on the left.
 - Each workspace remembers its row position, and window groups occupy one slot.
 
-| Shortcut | Action |
-| --- | --- |
-| `SUPER + Arrow` | Focus a window in that direction |
-| `SUPER + Comma` / `Period` | Next / previous row |
-| `SUPER + SHIFT + Arrow` | Swap a window in that direction |
-| `SUPER + Mouse wheel` | Move between rows |
+## Original setup showcase
 
-Built with Hyprland's Lua layout API and checked on Hyprland 0.56.2.
-Slots are fixed in size; native scrolling gestures and scrolloverview integration
-are not implemented or verified for zscroll.
-See the [layout source](.config/hypr/custom/layouts/zscroll.lua) and
-[configuration notes](.config/hypr/custom/README.md) for details and more shortcuts.
+https://github.com/user-attachments/assets/49c4bd63-1e22-40dd-95e0-bc4c3e90a520
 
 ## Features
 
