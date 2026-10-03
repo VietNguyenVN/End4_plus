@@ -3,6 +3,8 @@
 This repository contains my Hyprland configurations for End-4 dotfiles.
 It includes personalized layout tweaks, keybindings, and various utility scripts.
 
+https://github.com/user-attachments/assets/49c4bd63-1e22-40dd-95e0-bc4c3e90a520
+
 ## Meet zscroll — my own Hyprland layout
 
 **Two windows per row, scrolling vertically.** `zscroll` is my custom Lua layout
@@ -17,10 +19,6 @@ https://github.com/user-attachments/assets/121a8c6f-5027-4235-b3d1-12acecdeb02b
 - Swap windows directionally; closing or floating a window automatically repacks
   the remaining pairs. An odd final window stays on the left.
 - Each workspace remembers its row position, and window groups occupy one slot.
-
-## Original setup showcase
-
-https://github.com/user-attachments/assets/49c4bd63-1e22-40dd-95e0-bc4c3e90a520
 
 ## Features
 
