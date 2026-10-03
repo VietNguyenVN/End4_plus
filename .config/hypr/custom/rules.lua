@@ -1,4 +1,11 @@
 local window_rules = {
+	-- Full-width rows in lua:zscroll. Add this tag to other app rules as needed.
+	{
+		match = {
+			class = "(?i)waydroid(\\..*)?",
+		},
+		tag = "zscroll-full",
+	},
 	-- Keep restored app maximize requests from overriding the tiling layout.
 	-- Hyprland's maximize binding and app fullscreen requests still work.
 	{
@@ -24,12 +31,14 @@ local window_rules = {
 			class = "vesktop",
 		},
 		workspace = "special:vesktop",
+		tag = "zscroll-full",
 	},
 	{
 		match = {
 			class = "spotify",
 		},
 		workspace = "special:spotify",
+		tag = "zscroll-full",
 	},
 }
 
@@ -38,8 +47,3 @@ for _, rule in ipairs(window_rules) do
 end
 
 require("custom.actions.display").apply_gaps()
-
--- App scratchpads fill their work area instead of taking a zscroll half-slot.
-for _, name in ipairs({ "vesktop", "spotify" }) do
-	hl.workspace_rule({ workspace = "special:" .. name, layout = "scrolling" })
-end

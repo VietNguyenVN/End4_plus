@@ -29,7 +29,7 @@ end
 hl.config({
 	-- Scrolling
 	general = {
-		layout = "lua:zscroll",
+		layout = "scrolling",
 	},
 	scrolling = {
 		fullscreen_on_one_column = false,

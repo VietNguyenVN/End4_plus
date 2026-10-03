@@ -48,6 +48,21 @@ receive focus and bring their row into view; background workspace launches do
 not steal focus. Deferred updates use a new one-shot timer for each event burst
 (Hyprland destroys one-shot timers after they fire).
 Each workspace keeps its own row position while unfocused. Groups occupy one slot.
+
+For a full-width, full-height row in zscroll, add the `zscroll-full` tag through a
+normal window rule in `custom/rules.lua` (Hyprland regex matching):
+
+```lua
+{ match = { class = "(?i)waydroid(\\..*)?" }, tag = "zscroll-full" },
+```
+
+This rule is enabled for Waydroid and its `waydroid.*` app classes. Copy it and
+replace the class regex to give another app its own full-width row. Gaps and panels
+are respected. A full-width window starts a new row and keeps target order; an
+unpaired ordinary window before it stays half-width. Pairing resumes after it.
+Up/down navigation moves by these mixed rows, and any tagged group member makes
+its whole group full-width. This tag changes zscroll geometry only; other layouts
+retain their existing sizing behavior. Reload the configuration after editing rules.
 Your outer gaps expose the neighboring rows above/below the focused row; clicking
 those visible strips selects that window and scrolls its pair into view. No extra
 preview padding is added: the visible strip depends on `gaps_out` and `gaps_in`.

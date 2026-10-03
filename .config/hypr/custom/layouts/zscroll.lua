@@ -36,42 +36,85 @@ local function focused_index(ctx)
 	end
 end
 
+local function full_width(target)
+	local function tagged(win)
+		local tags = win and win.tags or {}
+		if type(tags) == "string" then
+			for tag in tags:gmatch("[^,%s]+") do
+				if tag == "zscroll-full" or tag == "zscroll-full*" then return true end
+			end
+		else
+			for _, tag in ipairs(tags) do
+				if tag == "zscroll-full" or tag == "zscroll-full*" then return true end
+			end
+		end
+		return false
+	end
+	local win = target.window
+	if tagged(win) then return true end
+	if win and win.group then
+		for _, member in ipairs(win.group.members or {}) do
+			if tagged(member) then return true end
+		end
+	end
+	return false
+end
+
+-- Preserve target order: a full-width target starts its own row, even if the
+-- preceding row has an empty right slot. Pair ordinary targets after it anew.
+local function pack(ctx)
+	local slots, packed = {}, {}
+	local open_row
+	for i, target in ipairs(ctx.targets) do
+		local full = full_width(target)
+		if full or not open_row then
+			packed[#packed + 1] = {}
+			open_row = #packed
+		end
+		local members = packed[open_row]
+		slots[i] = { row = open_row, column = #members, full = full }
+		members[#members + 1] = i
+		if full or #members == 2 then open_row = nil end
+	end
+	return slots, packed
+end
+
 local function recalculate(ctx)
 	local workspace = workspace_of(ctx)
-	if not workspace or #ctx.targets == 0 then
-		return
-	end
+	if not workspace or #ctx.targets == 0 then return end
+	local slots, packed = pack(ctx)
 	local i = focused_index(ctx)
-	local row = i and math.floor((i - 1) / 2) or (rows[workspace.id] or 0)
-	row = math.max(0, math.min(row, math.floor((#ctx.targets - 1) / 2)))
+	local row = i and slots[i].row or (rows[workspace.id] or 1)
+	row = math.max(1, math.min(row, #packed))
 	rows[workspace.id] = row
 	local area = ctx.area
-	-- Keep pixel boundaries shared on monitors with an odd logical width.
 	local left_width = math.floor(area.w / 2)
 	for index, target in ipairs(ctx.targets) do
-		local column = (index - 1) % 2
+		local slot = slots[index]
 		target:place({
-			x = area.x + (column == 1 and left_width or 0),
-			y = area.y + (math.floor((index - 1) / 2) - row) * area.h,
-			w = column == 0 and left_width or area.w - left_width,
+			x = area.x + (slot.column == 1 and left_width or 0),
+			y = area.y + (slot.row - row) * area.h,
+			w = slot.full and area.w or (slot.column == 0 and left_width or area.w - left_width),
 			h = area.h,
 		})
 	end
 end
 
-local function destination(i, n, direction)
+local function destination(ctx, i, direction)
+	local slots, packed = pack(ctx)
+	local slot = slots[i]
+	local members = packed[slot.row]
 	if direction == "next" then
-		return math.min(i + 1, n)
+		return math.min(i + 1, #ctx.targets)
 	elseif direction == "prev" then
 		return math.max(i - 1, 1)
 	elseif direction == "l" then
-		return i % 2 == 0 and i - 1 or i
+		return members[1]
 	elseif direction == "r" then
-		return i % 2 == 1 and math.min(i + 1, n) or i
-	elseif direction == "u" then
-		return i > 2 and i - 2 or i
-	elseif direction == "d" then
-		return math.floor((i - 1) / 2) < math.floor((n - 1) / 2) and math.min(i + 2, n) or i
+		return members[#members]
+	elseif direction == "u" or direction == "d" then
+		local adjacent = packed[slot.row + (direction == "u" and -1 or 1)]
+		return adjacent and (adjacent[slot.column + 1] or adjacent[1]) or i
 	end
 end
 
@@ -87,7 +130,7 @@ local function layout_msg(ctx, msg)
 	if not i then
 		return
 	end
-	local next_index = destination(i, #ctx.targets, direction)
+	local next_index = destination(ctx, i, direction)
 	if not next_index then
 		return "zscroll: unknown direction " .. tostring(direction)
 	end

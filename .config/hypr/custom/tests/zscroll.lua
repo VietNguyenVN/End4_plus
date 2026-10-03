@@ -155,4 +155,37 @@ events["workspace.removed"](workspaces[1])
 -- It remains truthy, but property reads (including id) return nil.
 events["workspace.removed"](setmetatable({}, { __index = function() return nil end }))
 events["workspace.removed"](nil)
+-- Full-width rules mix with half-width pairs without overlap or reordering.
+ctx = make_context(4, 6)
+ctx.targets[2].window.tags = { "zscroll-full*" }
+ctx.targets[5].window.tags = "other zscroll-full"
+active = ctx.targets[1].window
+provider.recalculate(ctx)
+assert(ctx.targets[1].box.w == 500)
+assert(ctx.targets[2].box.w == 1001 and ctx.targets[2].box.y == 830)
+assert(ctx.targets[3].box.y == 1630 and ctx.targets[4].box.y == 1630)
+assert(ctx.targets[4].box.x == 520)
+assert(ctx.targets[5].box.w == 1001 and ctx.targets[5].box.y == 2430)
+assert(ctx.targets[6].box.w == 500 and ctx.targets[6].box.y == 3230)
+message("focus d")
+assert(active == ctx.targets[2].window and ctx.targets[2].box.y == 30)
+message("focus r")
+assert(active == ctx.targets[2].window)
+message("focus d")
+message("focus r")
+assert(active == ctx.targets[4].window)
+message("focus d")
+assert(active == ctx.targets[5].window)
+message("swap next")
+assert(active == ctx.targets[6].window and ctx.targets[6].box.w == 1001)
+table.remove(ctx.targets, 2)
+provider.recalculate(ctx)
+assert(ctx.targets[1].box.y == ctx.targets[2].box.y)
+assert(ctx.targets[2].box.x == 520)
+-- A full-width member makes the entire native window group full-width.
+ctx.targets[1].window.group = { members = { { tags = { "zscroll-full" } } } }
+active = ctx.targets[1].window
+provider.recalculate(ctx)
+assert(ctx.targets[1].box.w == 1001)
 print("PASS: geometry, navigation, swaps, removal, workspaces, groups, repeated timers, new-window focus")
+print("PASS: mixed full-width rows, navigation, swaps, repacking, tagged groups")
