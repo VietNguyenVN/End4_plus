@@ -7,8 +7,7 @@ https://github.com/user-attachments/assets/49c4bd63-1e22-40dd-95e0-bc4c3e90a520
 
 ## Meet zscroll — my own Hyprland layout
 
-**Two windows per row, scrolling vertically.** `zscroll` is my custom Lua layout
-and the default in this setup. Windows follow a Z order: left to right, then down
+**Two windows per row, scrolling vertically.** `zscroll` is my custom Lua layout in this setup. Windows follow a Z order: left to right, then down
 to the next pair. Each window takes half the width and the full height of the
 available work area; focusing another row brings that pair into view.
 
