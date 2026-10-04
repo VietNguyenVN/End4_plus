@@ -191,7 +191,7 @@ assert(ctx.targets[1].box.w == 1001)
 print("PASS: geometry, navigation, swaps, removal, workspaces, groups, repeated timers, new-window focus")
 print("PASS: mixed full-width rows, navigation, swaps, repacking, tagged groups")
 -- Configurable capacity, adjacent-column navigation, and singleton centering.
-zscroll.configure({ windows_per_row = 3, center_single_window = false })
+zscroll.configure({ windows_per_row = 3, center_incomplete_rows = false })
 ctx = make_context(5, 7)
 active = ctx.targets[1].window
 provider.recalculate(ctx)
@@ -206,23 +206,23 @@ assert(active == ctx.targets[6].window)
 message("focus d")
 assert(active == ctx.targets[7].window)
 assert(ctx.targets[7].box.x == 20 and ctx.targets[7].box.w == 333)
-zscroll.configure({ windows_per_row = 3, center_single_window = true })
+zscroll.configure({ windows_per_row = 3, center_incomplete_rows = true })
 provider.recalculate(ctx)
 assert(ctx.targets[7].box.x == 354 and ctx.targets[7].box.w == 333)
--- Center a singleton before a full-width row too; two of three slots stay left.
+-- Center a singleton before a full-width row too; two of three slots are centered together.
 ctx.targets[2].window.tags = { "zscroll-full" }
 provider.recalculate(ctx)
 assert(ctx.targets[1].box.x == 354 and ctx.targets[2].box.w == 1001)
-assert(ctx.targets[6].box.x == 20 and ctx.targets[7].box.x == 353)
-zscroll.configure({ windows_per_row = 1, center_single_window = true })
+assert(ctx.targets[6].box.x == 187 and ctx.targets[7].box.x == 520)
+zscroll.configure({ windows_per_row = 1, center_incomplete_rows = true })
 provider.recalculate(ctx)
 for _, target in ipairs(ctx.targets) do assert(target.box.w == 1001 and target.box.x == 20) end
-assert(not pcall(zscroll.configure, { windows_per_row = 0, center_single_window = false }))
-assert(not pcall(zscroll.configure, { windows_per_row = 1.5, center_single_window = false }))
-assert(not pcall(zscroll.configure, { windows_per_row = 2, center_single_window = "yes" }))
+assert(not pcall(zscroll.configure, { windows_per_row = 0, center_incomplete_rows = false }))
+assert(not pcall(zscroll.configure, { windows_per_row = 1.5, center_incomplete_rows = false }))
+assert(not pcall(zscroll.configure, { windows_per_row = 2, center_incomplete_rows = "yes" }))
 print("PASS: configurable row capacity, centered singletons, mixed rows, option validation")
 -- Runtime capacity changes clamp at one.
-zscroll.configure({ windows_per_row = 2, center_single_window = false })
+zscroll.configure({ windows_per_row = 2, center_incomplete_rows = false })
 ctx = make_context(6, 4)
 active = ctx.targets[1].window
 message("capacity -1")
@@ -232,3 +232,30 @@ assert(ctx.targets[1].box.w == 1001)
 message("capacity +1")
 assert(ctx.targets[1].box.w == 500 and ctx.targets[2].box.y == 30)
 print("PASS: capacity shortcuts and minimum row capacity")
+
+-- Keyboard resizing changes only the focused row and preserves centering.
+zscroll.configure({ windows_per_row = 3, center_incomplete_rows = true })
+ctx = make_context(8, 5)
+active = ctx.targets[4].window
+provider.recalculate(ctx)
+local before = ctx.targets[4].box.w
+message("resize +0.05")
+assert(ctx.targets[4].box.w > before and ctx.targets[5].box.w < 334)
+assert(ctx.targets[1].box.w == 333)
+local left = ctx.targets[4].box.x - ctx.area.x
+local right = ctx.area.x + ctx.area.w - ctx.targets[5].box.x - ctx.targets[5].box.w
+assert(math.abs(left - right) <= 1)
+local grown = ctx.targets[4].box.w
+message("focus u")
+message("focus d")
+assert(ctx.targets[4].box.w == grown)
+for _ = 1, 30 do message("resize -0.05") end
+assert(ctx.targets[4].box.w >= 120)
+for _ = 1, 40 do message("resize +0.05") end
+assert(ctx.targets[5].box.w >= 120)
+ctx.targets[4].window.tags = { "zscroll-full" }
+message("resize -0.05")
+assert(ctx.targets[4].box.w == 1001)
+message("capacity +1")
+assert(ctx.targets[1].box.w == 250)
+print("PASS: centered partial rows, keyboard resizing, width limits, full-width rules, reset")

@@ -1,10 +1,10 @@
 -- Overrides applied after hyprland/general.lua.
 local display = require("custom.actions.display")
 
--- Z-scroll slots remain full-height; lone windows keep their normal slot width.
+-- Z-scroll slots remain full-height; center any incomplete row as a group.
 local zscroll_options = {
 	windows_per_row = 2,
-	center_single_window = false,
+	center_incomplete_rows = true, -- also centers 2 windows in a 3-slot row, etc.
 }
 require("custom.layouts.zscroll").configure(zscroll_options)
 

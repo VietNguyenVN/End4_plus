@@ -242,6 +242,12 @@ for key, direction in pairs({ Left = "l", Right = "r", Up = "u", Down = "d", Bra
 	rebind("SUPER + SHIFT + " .. key, zscroll.direction("swap", direction))
 end
 
+-- Override bracket focus in zscroll; other layouts keep directional focus.
+hl.unbind("SUPER + BracketLeft")
+hl.unbind("SUPER + BracketRight")
+hl.bind("SUPER + BracketLeft", zscroll.resize_focused("-0.05", "l"), { repeating = true })
+hl.bind("SUPER + BracketRight", zscroll.resize_focused("+0.05", "r"), { repeating = true })
+
 -- =============================================================================
 -- Fullscreen screensaver
 -- =============================================================================

@@ -2,16 +2,18 @@
 -- Hyprland owns target order; new targets append and removals compact it.
 local NAME = "lua:zscroll"
 local rows = {}
+local row_sizes = {}
 local M = {}
 local pointer = require("custom.actions.pointer")
-local options = { windows_per_row = 2, center_single_window = false }
+local options = { windows_per_row = 2, center_incomplete_rows = false }
 
 function M.configure(settings)
 	local count = settings.windows_per_row
 	assert(type(count) == "number" and count >= 1 and count < math.huge and count == math.floor(count),
 		"zscroll.windows_per_row must be a positive integer")
-	assert(type(settings.center_single_window) == "boolean", "zscroll.center_single_window must be boolean")
-	options = { windows_per_row = count, center_single_window = settings.center_single_window }
+	assert(type(settings.center_incomplete_rows) == "boolean", "zscroll.center_incomplete_rows must be boolean")
+	options = { windows_per_row = count, center_incomplete_rows = settings.center_incomplete_rows }
+	row_sizes = {}
 end
 
 local function workspace_of(ctx)
@@ -89,10 +91,33 @@ local function pack(ctx)
 	return slots, packed
 end
 
+-- Keep keyboard width adjustments for an unchanged ordered row only.
+local function sizes_for(ctx, packed, workspace)
+	local old = row_sizes[workspace.id] or {}
+	local current, result = {}, {}
+	for row, members in ipairs(packed) do
+		local ids = { tostring(options.windows_per_row) }
+		for _, index in ipairs(members) do
+			local win = ctx.targets[index].window
+			ids[#ids + 1] = tostring(win and (win.stable_id or win.address) or index)
+		end
+		local key = table.concat(ids, ":")
+		local sizes = old[key]
+		if not sizes then
+			sizes = {}
+			for column = 1, options.windows_per_row do sizes[column] = 1 / options.windows_per_row end
+		end
+		current[key], result[row] = sizes, sizes
+	end
+	row_sizes[workspace.id] = current
+	return result
+end
+
 local function recalculate(ctx)
 	local workspace = workspace_of(ctx)
 	if not workspace or #ctx.targets == 0 then return end
 	local slots, packed = pack(ctx)
+	local sizes = sizes_for(ctx, packed, workspace)
 	local i = focused_index(ctx)
 	local row = i and slots[i].row or (rows[workspace.id] or 1)
 	row = math.max(1, math.min(row, #packed))
@@ -100,12 +125,15 @@ local function recalculate(ctx)
 	local area = ctx.area
 	for index, target in ipairs(ctx.targets) do
 		local slot = slots[index]
-		local left = math.floor(area.w * slot.column / options.windows_per_row)
-		local right = math.floor(area.w * (slot.column + 1) / options.windows_per_row)
+		local fractions = sizes[slot.row]
+		local start, occupied = 0, 0
+		for column = 1, slot.column do start = start + fractions[column] end
+		for column = 1, #packed[slot.row] do occupied = occupied + fractions[column] end
+		local offset = options.center_incomplete_rows and not slot.full
+			and math.floor((area.w - math.floor(area.w * occupied + 1e-7)) / 2) or 0
+		local left = offset + math.floor(area.w * start + 1e-7)
+		local right = offset + math.floor(area.w * (start + fractions[slot.column + 1]) + 1e-7)
 		local width = slot.full and area.w or right - left
-		if options.center_single_window and not slot.full and #packed[slot.row] == 1 then
-			left = math.floor((area.w - width) / 2)
-		end
 		target:place({
 			x = area.x + left,
 			y = area.y + (slot.row - row) * area.h,
@@ -133,15 +161,46 @@ local function destination(ctx, i, direction)
 	end
 end
 
+local function resize_focused(ctx, delta)
+	local workspace, i = workspace_of(ctx), focused_index(ctx)
+	if not workspace or not i or options.windows_per_row == 1 then return end
+	local slots, packed = pack(ctx)
+	local slot = slots[i]
+	if slot.full then return end
+	local sizes = sizes_for(ctx, packed, workspace)[slot.row]
+	local column = slot.column + 1
+	local minimum = math.min(120 / ctx.area.w, 1 / options.windows_per_row)
+	local available = 0
+	for j, size in ipairs(sizes) do
+		if j ~= column then available = available + math.max(0, size - minimum) end
+	end
+	local change = math.max(minimum - sizes[column], math.min(delta, available))
+	if math.abs(change) < 1e-10 then return end
+	for j, size in ipairs(sizes) do
+		if j ~= column then
+			-- Growing borrows proportionally from slots with space to spare;
+			-- shrinking returns space evenly, including unoccupied slots.
+			local share = change > 0 and math.max(0, size - minimum) / available or 1 / (#sizes - 1)
+			sizes[j] = size - change * share
+		end
+	end
+	sizes[column] = sizes[column] + change
+end
+
 local function layout_msg(ctx, msg)
 	if msg == "refresh" then
 		return -- Hyprland calls recalculate after layout_msg returns.
+	end
+	local resize_delta = msg:match("^resize ([+-]0%.05)$")
+	if resize_delta then
+		resize_focused(ctx, tonumber(resize_delta))
+		return
 	end
 	local capacity_delta = msg:match("^capacity ([+-]1)$")
 	if capacity_delta then
 		M.configure({
 			windows_per_row = math.max(1, options.windows_per_row + tonumber(capacity_delta)),
-			center_single_window = options.center_single_window,
+			center_incomplete_rows = options.center_incomplete_rows,
 		})
 		hl.notification.create({ text = "Z-scroll: " .. options.windows_per_row .. " windows per row", duration = 1500, icon = "info" })
 		return
@@ -223,8 +282,20 @@ hl.on("workspace.removed", function(workspace)
 	local id = workspace and workspace.id
 	if id ~= nil then
 		rows[id] = nil
+		row_sizes[id] = nil
 	end
 end)
+
+function M.resize_focused(delta, fallback_direction)
+	return function()
+		local workspace, win = active_workspace(), hl.get_active_window()
+		if workspace and workspace.tiled_layout == NAME and win and not win.floating then
+			hl.dispatch(hl.dsp.layout("resize " .. delta))
+		else
+			hl.dispatch(hl.dsp.focus({ direction = fallback_direction }))
+		end
+	end
+end
 
 -- Used for shared directional bindings: other layouts keep their defaults.
 function M.direction(action, direction)

@@ -50,12 +50,14 @@ Edit `zscroll_options` near the top of `custom/general.lua` and reload to change
 ```lua
 local zscroll_options = {
     windows_per_row = 2,          -- positive integer; each ordinary slot is 1/N wide
-    center_single_window = false, -- center a row with exactly one ordinary window
+    center_incomplete_rows = false, -- center every incomplete row as a group
 }
 ```
 
-Centering keeps the lone window's normal slot width. Other incomplete rows stay
-left-aligned, and tagged full-width windows still occupy a whole row.
+The `center_incomplete_rows` option centers every incomplete row,
+including two windows in a three-slot row, without stretching the windows.
+When false, incomplete rows stay left-aligned. Tagged full-width windows still
+occupy a whole row. Your current configured value is kept in `general.lua`.
 `SUPER + Semicolon` decreases `windows_per_row` (minimum 1), and
 `SUPER + Apostrophe` increases it while zscroll is active. This updates the shared
 runtime setting; other zscroll workspaces use it on their next layout update.
@@ -90,11 +92,20 @@ Z-scroll shortcuts:
 - `SUPER + mouse_up` / `mouse_down`: previous / next row (up is up, down is down),
   for both zscroll and native scrolling.
 - `SUPER + ALT + mouse_up` / `mouse_down`: swap up / down.
-- Bracket keys behave like left/right arrows, including Shift for swapping.
+- `SUPER + BracketLeft` / `BracketRight`: shrink / grow the focused window's width.
+- `SUPER + SHIFT + BracketLeft` / `BracketRight`: swap left / right.
 - `SUPER + Semicolon` / `Apostrophe`: decrease / increase windows per row.
 
 Keyboard/wheel focus navigation centers the pointer in the newly focused window
 after row placement. Clicking row previews keeps the pointer at the click position.
+
+Bracket resizing changes width by 5% of the work area per step, keeping row height
+fixed and sharing space with other slots (including empty ones) in the same row.
+Incomplete rows remain centered as a group when centering is enabled. A minimum
+slot width prevents collapse; full-width tagged rows and capacity-one rows stay
+full-width. Adjustments persist while a row's membership/order stays unchanged,
+and reset on capacity changes or config reload. Other layouts retain bracket focus
+navigation. This is keyboard-only resizing; no custom mouse-drag handler is installed.
 
 Native scrolling's resize/consume messages do not apply to zscroll.
 It uses Lua target placement and row transitions, not the native scrolling
