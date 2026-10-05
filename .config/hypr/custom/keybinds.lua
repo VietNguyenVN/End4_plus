@@ -141,7 +141,7 @@ rebind("SUPER + Z", function()
 		duration = 2000,
 		icon = "info",
 	})
-end, "Misc: Toggle blur, dimming and transparency")
+end, "Misc: Toggle visual effects")
 
 -- Floating
 rebind("SUPER + ALT + Space", floating.cycle_active)
@@ -168,11 +168,14 @@ end, "Misc: Decrease gaps_in")
 -- =============================================================================
 
 bind(COPILOT_KEY, function()
-	layout.cycle({ "scrolling", "lua:zscroll", "monocle" })
+	layout.cycle({ "scrolling", "lua:zscroll" })
 end, "Misc: !CYCLE LAYOUT")
 bind("CTRL + " .. COPILOT_KEY, function()
 	layout.cycle({ "dwindle", "master" })
 end, "Misc: !CYCLE LAYOUT (TILED)")
+bind("ALT + " .. COPILOT_KEY, function()
+	layout.cycle({ "monocle" })
+end, "Misc: !MONOCLE LAYOUT")
 
 -- =============================================================================
 -- Layout keybinds
@@ -196,7 +199,7 @@ bind("SUPER + ALT + Comma", layout.bind("master", "rollprev"))
 bind("SUPER + ALT + Period", layout.bind("master", "rollnext"))
 bind("SUPER + Semicolon", layout.bind("master", "mfact -0.05"))
 bind("SUPER + Apostrophe", layout.bind("master", "mfact +0.05"))
-bind("SUPER + Space", layout.bind("master", "orientationcycle"), "Window: [m] Cycle orientation")
+bind("SUPER + Space", layout.bind("master", "orientationcycle"))
 
 -- Monocle
 bind("ALT + TAB", layout.bind("monocle", "cyclenext"))
