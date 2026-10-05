@@ -86,7 +86,8 @@ Z-scroll shortcuts:
 - `SUPER + Comma` / `Period`: next / previous row, without wrapping;
   retain the focused column where possible.
 - `SUPER + Arrow`: spatial focus; up/down retain the column where possible.
-- `SUPER + ALT + Comma` / `Period`: next / previous row.
+- `SUPER + ALT + Comma` / `Period`: move the entire focused row down / up,
+  keeping its windows together, without wrapping at the ends.
 - `SUPER + SHIFT + Comma` / `Period`: swap with the next / previous window.
 - `SUPER + SHIFT + Arrow`: swap in that direction.
 - `SUPER + mouse_up` / `mouse_down`: previous / next row (up is up, down is down),
@@ -98,6 +99,10 @@ Z-scroll shortcuts:
 
 Keyboard/wheel focus navigation centers the pointer in the newly focused window
 after row placement. Clicking row previews keeps the pointer at the click position.
+
+Whole-row moves retain focus and resized widths, including partial rows and
+full-width tagged rows. Partial-row boundaries are preserved until window order,
+membership, full-width tags, or row capacity changes; then normal packing resumes.
 
 Bracket resizing changes width by 5% of the work area per step, keeping row height
 fixed and sharing space with other slots (including empty ones) in the same row.

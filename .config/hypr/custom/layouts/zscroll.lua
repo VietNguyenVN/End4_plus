@@ -3,6 +3,8 @@
 local NAME = "lua:zscroll"
 local rows = {}
 local row_sizes = {}
+local row_partitions = {}
+local reordering = false
 local M = {}
 local pointer = require("custom.actions.pointer")
 local options = { windows_per_row = 2, center_incomplete_rows = false }
@@ -14,6 +16,7 @@ function M.configure(settings)
 	assert(type(settings.center_incomplete_rows) == "boolean", "zscroll.center_incomplete_rows must be boolean")
 	options = { windows_per_row = count, center_incomplete_rows = settings.center_incomplete_rows }
 	row_sizes = {}
+	row_partitions = {}
 end
 
 local function workspace_of(ctx)
@@ -72,10 +75,34 @@ local function full_width(target)
 	return false
 end
 
+local function order_key(targets)
+	local ids = {}
+	for i, target in ipairs(targets) do
+		local win = target.window
+		ids[i] = tostring(win and (win.stable_id or win.address) or i) .. (full_width(target) and "!" or "")
+	end
+	return table.concat(ids, ":")
+end
+
 -- Preserve target order: a full-width target starts its own row, even if the
 -- preceding row has an empty right slot. Pair ordinary targets after it anew.
 local function pack(ctx)
 	local slots, packed = {}, {}
+	local workspace = workspace_of(ctx)
+	local partition = workspace and row_partitions[workspace.id]
+	if partition and partition.order == order_key(ctx.targets) then
+		local index = 1
+		for row, count in ipairs(partition.counts) do
+			packed[row] = {}
+			for column = 0, count - 1 do
+				packed[row][column + 1] = index
+				slots[index] = { row = row, column = column, full = full_width(ctx.targets[index]) }
+				index = index + 1
+			end
+		end
+		return slots, packed
+	end
+	if workspace then row_partitions[workspace.id] = nil end
 	local open_row
 	for i, target in ipairs(ctx.targets) do
 		local full = full_width(target)
@@ -114,6 +141,7 @@ local function sizes_for(ctx, packed, workspace)
 end
 
 local function recalculate(ctx)
+	if reordering then return end
 	local workspace = workspace_of(ctx)
 	if not workspace or #ctx.targets == 0 then return end
 	local slots, packed = pack(ctx)
@@ -187,10 +215,49 @@ local function resize_focused(ctx, delta)
 	sizes[column] = sizes[column] + change
 end
 
+local function swap_row(ctx, direction)
+	local workspace, i = workspace_of(ctx), focused_index(ctx)
+	if not workspace or not i then return end
+	local slots, packed = pack(ctx)
+	local row = slots[i].row
+	local adjacent = row + (direction == "u" and -1 or 1)
+	if not packed[adjacent] then return end
+	packed[row], packed[adjacent] = packed[adjacent], packed[row]
+	local desired, counts, current = {}, {}, {}
+	for index, target in ipairs(ctx.targets) do
+		if not target.window then return end
+		current[index] = target
+	end
+	for r, members in ipairs(packed) do
+		counts[r] = #members
+		for _, index in ipairs(members) do desired[#desired + 1] = ctx.targets[index] end
+	end
+	-- Native swaps recalculate synchronously. Wait until the whole permutation
+	-- is finished so temporary pairings cannot discard the original row widths.
+	reordering = true
+	local ok, err = pcall(function()
+		for index, target in ipairs(desired) do
+			if current[index] ~= target then
+				local other = index + 1
+				while current[other] ~= target do other = other + 1 end
+				hl.dispatch(hl.dsp.window.swap({ window = current[index].window, target = target.window }))
+				current[index], current[other] = current[other], current[index]
+			end
+		end
+	end)
+	reordering = false
+	if not ok then return "zscroll: row swap failed: " .. tostring(err) end
+	-- Preserve partial rows too: moving a singleton ahead of a pair must not
+	-- silently combine it with the first window of that pair.
+	row_partitions[workspace.id] = { order = order_key(desired), counts = counts }
+end
+
 local function layout_msg(ctx, msg)
 	if msg == "refresh" then
 		return -- Hyprland calls recalculate after layout_msg returns.
 	end
+	local row_direction = msg:match("^swaprow ([ud])$")
+	if row_direction then return swap_row(ctx, row_direction) end
 	local resize_delta = msg:match("^resize ([+-]0%.05)$")
 	if resize_delta then
 		resize_focused(ctx, tonumber(resize_delta))
@@ -283,6 +350,7 @@ hl.on("workspace.removed", function(workspace)
 	if id ~= nil then
 		rows[id] = nil
 		row_sizes[id] = nil
+		row_partitions[id] = nil
 	end
 end)
 

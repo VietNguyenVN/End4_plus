@@ -12,7 +12,7 @@ local function layout_bind(layout_name, cmd)
 		end
 		hl.dispatch(hl.dsp.layout(cmd))
 		if (layout_name == "scrolling" or layout_name == "lua:zscroll")
-			and (cmd:match("^focus ") or cmd:match("^swapcol ")) then
+			and (cmd:match("^focus ") or cmd:match("^swapcol ") or cmd:match("^swaprow ")) then
 			pointer.center_after_navigation()
 		end
 	end

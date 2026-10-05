@@ -28,7 +28,7 @@ hl = {
 		window = { swap = function(opts) return function()
 			local a, b
 			for i, target in ipairs(ctx.targets) do
-				if target.window == active then a = i end
+				if target.window == (opts.window or active) then a = i end
 				if target.window == opts.target then b = i end
 			end
 			ctx.targets[a], ctx.targets[b] = ctx.targets[b], ctx.targets[a]
@@ -259,3 +259,44 @@ assert(ctx.targets[4].box.w == 1001)
 message("capacity +1")
 assert(ctx.targets[1].box.w == 250)
 print("PASS: centered partial rows, keyboard resizing, width limits, full-width rules, reset")
+-- Whole-row movement preserves groups, focus, widths, and incomplete rows.
+zscroll.configure({ windows_per_row = 2, center_incomplete_rows = true })
+ctx = make_context(9, 5)
+local original = {}
+for i, target in ipairs(ctx.targets) do original[i] = target end
+active = original[1].window
+provider.recalculate(ctx)
+message("resize +0.05")
+local resized_width = original[1].box.w
+message("swaprow d")
+assert(ctx.targets[1] == original[3] and ctx.targets[2] == original[4])
+assert(ctx.targets[3] == original[1] and ctx.targets[4] == original[2])
+assert(active == original[1].window and original[1].box.w == resized_width)
+message("swaprow d")
+assert(ctx.targets[3] == original[5] and ctx.targets[4] == original[1])
+assert(original[1].box.y == original[2].box.y and original[5].box.y < original[1].box.y)
+assert(original[5].box.x > ctx.area.x) -- singleton remains centered
+message("swaprow d") -- last row does not wrap
+assert(ctx.targets[4] == original[1])
+message("swaprow u")
+message("swaprow u")
+assert(ctx.targets[1] == original[1] and ctx.targets[2] == original[2])
+assert(original[1].box.w == resized_width)
+message("swaprow u") -- first row does not wrap
+assert(ctx.targets[1] == original[1])
+-- Full-width row and a three-window row move without mixing members.
+zscroll.configure({ windows_per_row = 3, center_incomplete_rows = true })
+ctx = make_context(10, 5)
+original = {}
+for i, target in ipairs(ctx.targets) do original[i] = target end
+original[4].window.tags = { "zscroll-full" }
+active = original[4].window
+provider.recalculate(ctx)
+message("swaprow u")
+assert(ctx.targets[1] == original[4] and original[4].box.w == 1001)
+assert(original[1].box.y == original[2].box.y and original[2].box.y == original[3].box.y)
+message("swaprow d")
+assert(ctx.targets[4] == original[4])
+message("swaprow d")
+assert(ctx.targets[5] == original[4] and original[5].box.y < original[4].box.y)
+print("PASS: whole-row swaps, partial/full-width rows, focus, preserved widths, boundaries")
