@@ -1,11 +1,4 @@
 local window_rules = {
-	-- Full-width rows in lua:zscroll. Add this tag to other app rules as needed.
-	{
-		match = {
-			class = "(?i)waydroid(\\..*)?",
-		},
-		tag = "zscroll-full",
-	},
 	-- Keep restored app maximize requests from overriding the tiling layout.
 	-- Hyprland's maximize binding and app fullscreen requests still work.
 	{
@@ -25,6 +18,16 @@ local window_rules = {
 			class = ".*",
 		},
 		no_blur = false,
+	},
+	-- Keep Waydroid opaque and full-width in lua:zscroll.
+	-- Apply after the global opacity and blur rules.
+	{
+		match = {
+			class = "(?i)waydroid(\\..*)?",
+		},
+		tag = "zscroll-full",
+		opacity = "1 override 1 override 1 override",
+		no_blur = true,
 	},
 	{
 		match = {
