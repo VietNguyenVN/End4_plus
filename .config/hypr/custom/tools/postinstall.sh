@@ -19,3 +19,10 @@ echo "==> Cleaning up old config backups..."
 find "$CONFIG_DIR" -type f -name "*.conf.old" -print -delete
 
 echo "==> Post-install update completed."
+
+# --- end4-pC reinstall --
+cd ~/.config/quickshell/
+git clone https://github.com/pctrade/end4-pC.git
+killall qs 2>/dev/null
+qs -c end4-pC >/dev/null 2>&1 &
+disown

@@ -5,7 +5,9 @@ for _, item in ipairs({
 	{ "GLFW_IM_MODULE", "ibus" },
 	{ "INPUT_METHOD", "fcitx" },
 	{ "EDITOR", "nvim" },
-	{ "QSG_RHI_BACKEND", "vulkan" },
+	-- { "QSG_RHI_BACKEND", "vulkan" },
+	{ "QSG_RHI_BACKEND", "opengl" },
+	{ "QSG_RENDER_LOOP", "threaded" },
 }) do
 	hl.env(item[1], item[2])
 end
