@@ -38,7 +38,7 @@
       "type": "disk",
       "key": " ",
       "folders": "/",
-      "format": "{days} days"
+      "format": "lua:return dofile('/home/vietnguyenx/.config/fastfetch/os-age.lua')(...)"
     },
     {
       "type": "packages",

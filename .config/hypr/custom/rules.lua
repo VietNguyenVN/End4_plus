@@ -11,6 +11,11 @@ local window_rules = {
 		},
 		no_blur = false,
 	},
+	-- Keep Document Viewer mostly opaque.
+	{
+		match = { class = "org\\.gnome\\.Papers" },
+		opacity = "0.97 override 0.97 override 1 override",
+	},
 	-- Keep Waydroid opaque and full-width in lua:zscroll.
 	-- Apply after the global opacity and blur rules.
 	{
