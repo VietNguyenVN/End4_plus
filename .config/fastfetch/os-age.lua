@@ -25,6 +25,9 @@ return function(age)
     local function unit(n, name)
         return n .. ' ' .. name .. (n == 1 and '' or 's')
     end
-    return unit(months // 12, 'year') .. ', ' .. unit(months % 12, 'month')
-        .. ', ' .. unit(days, 'day') .. ' (' .. unit(age.days, 'day') .. ')'
+    local parts = {}
+    if months >= 12 then parts[#parts + 1] = unit(months // 12, 'year') end
+    if months > 0 then parts[#parts + 1] = unit(months % 12, 'month') end
+    parts[#parts + 1] = unit(days, 'day')
+    return table.concat(parts, ', ') .. ' (' .. unit(age.days, 'day') .. ')'
 end
