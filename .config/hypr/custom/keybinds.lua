@@ -3,7 +3,10 @@ local desktop = require("custom.actions.desktop")
 local display = require("custom.actions.display")
 local floating = require("custom.actions.floating")
 local layout = require("custom.actions.layout")
+local zscroll = require("custom.layouts.zscroll")
 local shell = require("custom.actions.shell")
+
+local COPILOT_KEY = "SUPER + SHIFT + F23"
 
 -- Binding helpers: rebind replaces defaults loaded by hyprland/keybinds.lua.
 local function bind(key, action, description)
@@ -45,15 +48,15 @@ bind_cmd("SUPER + SHIFT + Q", "pkill -9 -f $(hyprctl activewindow -j | jq -r .cl
 bind_global("CTRL + ALT + Backspace", "quickshell:sessionToggle")
 bind_cmd("SUPER + ALT + L", "loginctl lock-session")
 hl.unbind("SUPER + L")
-rebind("SUPER + ALT + H", desktop.toggle, "Workspace: Show desktop / restore windows")
+rebind("SUPER + ALT + H", desktop.toggle)
 
 -- =============================================================================
 -- Keybinds: apps
 -- =============================================================================
 
 bind_cmd("SUPER + SHIFT + E", "[float; size 1300 800; center] dolphin")
-rebind("SUPER + W", apps.focus_or_launch_firefox(false), "App: Browser")
-rebind("SUPER + SHIFT + W", apps.focus_or_launch_firefox(true))
+rebind("SUPER + W", apps.focus_or_launch_zen(false), "App: Browser")
+rebind("SUPER + SHIFT + W", apps.focus_or_launch_zen(true))
 rebind(
 	"SUPER + SHIFT + O",
 	apps.focus_or_launch({
@@ -63,7 +66,8 @@ rebind(
 	"App: Obsidian"
 )
 rebind_cmd("SUPER + X", "kitty nvim")
-rebind_cmd("SUPER + C", "papers", "App: Document Viewer")
+rebind_cmd("SUPER + C", "kitty codex")
+bind_cmd("SUPER + ALT + C", "chatgpt")
 rebind_cmd("SUPER + SHIFT + T", "[float; size 1300 800; center] kitty")
 rebind_cmd("SUPER + Return", "[float; size 1300 800; center] kitty fish -c 'fastfetch; exec fish'")
 
@@ -100,6 +104,7 @@ bind("SUPER + Backslash", apps.toggle_fcitx5, "App: Toggle fcitx5")
 bind("SUPER + ALT + D", shell.toggle_dock, "Shell: Toggle dock")
 bind("SUPER + ALT + K", shell.toggle_clock, "Shell: Toggle clock")
 bind_global("SUPER + ALT + J", "quickshell:barToggle", "Shell: Toggle bar")
+bind("SUPER + ALT + P", display.toggle_refresh, "Misc: Change refresh rate")
 
 -- =============================================================================
 -- Keybinds: scripts / maintenance
@@ -113,6 +118,31 @@ bind_cmd("SUPER + SHIFT + Y", "kitty sh -c 'topgrade && cachy-update'", "Misc: U
 -- =============================================================================
 -- Keybinds: misc
 -- =============================================================================
+-- Toggle blur, dimming and transparency together.
+local opaque_rule = hl.window_rule({
+	name = "visual-effects-opaque",
+	match = { class = ".*" },
+	opacity = "1 override 1 override 1 override",
+	force_rgbx = true,
+})
+opaque_rule:set_enabled(false)
+
+rebind("SUPER + Z", function()
+	local enabled = not hl.get_config("decoration.blur.enabled")
+	opaque_rule:set_enabled(not enabled)
+	hl.config({
+		decoration = {
+			blur = { enabled = enabled },
+			dim_inactive = enabled,
+		},
+	})
+	hl.notification.create({
+		text = enabled and "Visual effects: ON" or "Visual effects: OFF",
+		duration = 2000,
+		icon = "info",
+	})
+end, "Misc: Toggle visual effects")
+
 -- Floating
 rebind("SUPER + ALT + Space", floating.cycle_active)
 
@@ -137,12 +167,15 @@ end, "Misc: Decrease gaps_in")
 -- Keybinds: layout cycling
 -- =============================================================================
 
-bind("SUPER + Z", function()
-	layout.cycle({ "scrolling", "monocle" })
+bind(COPILOT_KEY, function()
+	layout.cycle({ "scrolling", "lua:zscroll" })
 end, "Misc: !CYCLE LAYOUT")
-bind("CTRL + SUPER + Z", function()
+bind("CTRL + " .. COPILOT_KEY, function()
 	layout.cycle({ "dwindle", "master" })
 end, "Misc: !CYCLE LAYOUT (TILED)")
+bind("ALT + " .. COPILOT_KEY, function()
+	layout.cycle({ "monocle" })
+end, "Misc: !MONOCLE LAYOUT")
 
 -- =============================================================================
 -- Layout keybinds
@@ -166,14 +199,14 @@ bind("SUPER + ALT + Comma", layout.bind("master", "rollprev"))
 bind("SUPER + ALT + Period", layout.bind("master", "rollnext"))
 bind("SUPER + Semicolon", layout.bind("master", "mfact -0.05"))
 bind("SUPER + Apostrophe", layout.bind("master", "mfact +0.05"))
-bind("SUPER + Space", layout.bind("master", "orientationcycle"), "Window: [m] Cycle orientation")
+bind("SUPER + Space", layout.bind("master", "orientationcycle"))
 
 -- Monocle
 bind("ALT + TAB", layout.bind("monocle", "cyclenext"))
 
 -- Scrolling
-bind("SUPER + Period", layout.bind("scrolling", "focus u"), "Window: [s] Move view (u)")
-bind("SUPER + Comma", layout.bind("scrolling", "focus d"), "Window: [s] Move view (d)")
+bind("SUPER + Period", layout.bind("scrolling", "focus u"))
+bind("SUPER + Comma", layout.bind("scrolling", "focus d"))
 bind("SUPER + SHIFT + Period", layout.bind("scrolling", "consume_or_expel prev"))
 bind("SUPER + SHIFT + Comma", layout.bind("scrolling", "consume_or_expel next"))
 bind("SUPER + ALT + Comma", layout.bind("scrolling", "swapcol r"))
@@ -185,14 +218,38 @@ bind("SUPER + Apostrophe", layout.bind("scrolling", "colresize -0.1"))
 bind("SUPER + SHIFT + BracketLeft", hl.dsp.window.move({ direction = "l" }))
 bind("SUPER + SHIFT + BracketRight", hl.dsp.window.move({ direction = "r" }))
 
-rebind("SUPER + mouse_up", layout.bind("scrolling", "focus d"))
-rebind("SUPER + mouse_down", layout.bind("scrolling", "focus u"))
+rebind("SUPER + mouse_up", layout.bind("scrolling", "focus u"))
+rebind("SUPER + mouse_down", layout.bind("scrolling", "focus d"))
 rebind("SUPER + SHIFT + mouse_up", hl.dsp.focus({ workspace = "r+1" }))
 rebind("SUPER + SHIFT + mouse_down", hl.dsp.focus({ workspace = "r-1" }))
 rebind("SUPER + ALT + mouse_up", layout.bind("scrolling", "swapcol l"))
 rebind("SUPER + ALT + mouse_down", layout.bind("scrolling", "swapcol r"))
 rebind("CTRL + SUPER + mouse_up", layout.bind("scrolling", "colresize -0.1"))
 rebind("CTRL + SUPER + mouse_down", layout.bind("scrolling", "colresize +0.1"))
+
+-- Z-scroll: row capacity, navigation, and swaps.
+bind("SUPER + Semicolon", layout.bind("lua:zscroll", "capacity -1"))
+bind("SUPER + Apostrophe", layout.bind("lua:zscroll", "capacity +1"))
+bind("SUPER + Comma", layout.bind("lua:zscroll", "focus d"))
+bind("SUPER + Period", layout.bind("lua:zscroll", "focus u"))
+bind("SUPER + SHIFT + Comma", layout.bind("lua:zscroll", "swap next"))
+bind("SUPER + SHIFT + Period", layout.bind("lua:zscroll", "swap prev"))
+bind("SUPER + ALT + Comma", layout.bind("lua:zscroll", "swaprow d"))
+bind("SUPER + ALT + Period", layout.bind("lua:zscroll", "swaprow u"))
+bind("SUPER + mouse_up", layout.bind("lua:zscroll", "focus u"))
+bind("SUPER + mouse_down", layout.bind("lua:zscroll", "focus d"))
+bind("SUPER + ALT + mouse_up", layout.bind("lua:zscroll", "swap u"))
+bind("SUPER + ALT + mouse_down", layout.bind("lua:zscroll", "swap d"))
+for key, direction in pairs({ Left = "l", Right = "r", Up = "u", Down = "d", BracketLeft = "l", BracketRight = "r" }) do
+	rebind("SUPER + " .. key, zscroll.direction("focus", direction))
+	rebind("SUPER + SHIFT + " .. key, zscroll.direction("swap", direction))
+end
+
+-- Override bracket focus in zscroll; other layouts keep directional focus.
+hl.unbind("SUPER + BracketLeft")
+hl.unbind("SUPER + BracketRight")
+hl.bind("SUPER + BracketLeft", zscroll.resize_focused("-0.05", "l"), { repeating = true })
+hl.bind("SUPER + BracketRight", zscroll.resize_focused("+0.05", "r"), { repeating = true })
 
 -- =============================================================================
 -- Fullscreen screensaver
@@ -210,26 +267,3 @@ fullscreen_kitty_app("fetch", "fetch", "SUPER + ALT + Return")
 
 -- Scrolling overview
 bind("SUPER + Backspace", hl.plugin.scrolloverview.overview("toggle"))
-
--- =============================================================================
--- End4-pC
--- =============================================================================
-hl.bind("SUPER + I", hl.dsp.global("quickshell:settingsToggle"), { description = "Toggle settings" })
-rebind("SUPER + Tab", function()
-	local active = hl.get_active_monitor()
-	if not active then
-		return
-	end
-
-	local target
-
-	if active.name == "DP-2" then
-		target = "HDMI-A-1"
-	else
-		target = "DP-2"
-	end
-
-	hl.dispatch(hl.dsp.focus({
-		monitor = target,
-	}))
-end, "Monitor: Toggle focus")

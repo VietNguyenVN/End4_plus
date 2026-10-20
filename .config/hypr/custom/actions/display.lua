@@ -23,16 +23,7 @@ end
 local function save_settings(settings)
 	local temporary = SETTINGS_PATH .. ".tmp"
 	local file = assert(io.open(temporary, "w"))
-	assert(
-		file:write(
-			string.format(
-				"refresh=%d\ngaps_out=%d\ngaps_in=%d\n",
-				settings.refresh,
-				settings.gaps_out,
-				settings.gaps_in
-			)
-		)
-	)
+	assert(file:write(string.format("refresh=%d\ngaps_out=%d\ngaps_in=%d\n", settings.refresh, settings.gaps_out, settings.gaps_in)))
 	assert(file:close())
 	assert(os.rename(temporary, SETTINGS_PATH))
 end
@@ -40,10 +31,18 @@ end
 function M.apply_gaps(settings)
 	settings = settings or M.read_settings()
 	hl.workspace_rule({ workspace = "s[false]", gaps_out = settings.gaps_out, gaps_in = settings.gaps_in })
-	hl.workspace_rule({
-		workspace = "s[true]",
-		gaps_out = settings.gaps_out + SPECIAL_GAP_OFFSET,
-		gaps_in = settings.gaps_in,
+	hl.workspace_rule({ workspace = "s[true]", gaps_out = settings.gaps_out + SPECIAL_GAP_OFFSET, gaps_in = settings.gaps_in })
+end
+
+function M.toggle_refresh()
+	local settings = M.read_settings()
+	settings.refresh = settings.refresh == 120 and 60 or 120
+	save_settings(settings)
+	hl.monitor({ output = "eDP-1", mode = string.format("1920x1200@%d", settings.refresh), position = "auto", scale = 1, transform = 0 })
+	hl.notification.create({
+		text = string.format("Hyprland Refresh Rate: eDP-1 switched to %dHz", settings.refresh),
+		duration = 3000,
+		icon = "info",
 	})
 end
 
@@ -53,12 +52,7 @@ local function adjust_gaps(key, delta)
 	save_settings(settings)
 	M.apply_gaps(settings)
 	hl.notification.create({
-		text = string.format(
-			"gaps_out: %d/%d   gaps_in: %d",
-			settings.gaps_out,
-			settings.gaps_out + SPECIAL_GAP_OFFSET,
-			settings.gaps_in
-		),
+		text = string.format("gaps_out: %d/%d   gaps_in: %d", settings.gaps_out, settings.gaps_out + SPECIAL_GAP_OFFSET, settings.gaps_in),
 		duration = 1500,
 		icon = "info",
 	})

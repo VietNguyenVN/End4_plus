@@ -1,3 +1,12 @@
+-- Overrides applied after hyprland/general.lua.
+
+-- Z-scroll slots remain full-height; center any incomplete row as a group.
+local zscroll_options = {
+	windows_per_row = 2,
+	center_incomplete_rows = true, -- also centers 2 windows in a 3-slot row, etc.
+}
+require("custom.layouts.zscroll").configure(zscroll_options)
+
 hl.config({
 	-- Scrolling
 	general = {
@@ -25,14 +34,6 @@ hl.config({
 	},
 })
 
-for i = 1, 10 do
-	hl.workspace_rule({ workspace = tostring(i), monitor = "DP-2", default = true })
-end
-
-for i = 11, 20 do
-	hl.workspace_rule({ workspace = tostring(i), monitor = "HDMI-A-1", default = true })
-end
-
 -- hl.animation({ leaf = "workspaces", enabled = true, speed = 7, bezier = "menu_decel", style = "slidevert" })
 
 -- Window animations
@@ -55,3 +56,6 @@ hl.config({
 		},
 	},
 })
+
+-- Machine-specific overrides must be applied last.
+require("custom.pc")

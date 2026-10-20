@@ -20,9 +20,14 @@ find "$CONFIG_DIR" -type f -name "*.conf.old" -print -delete
 
 echo "==> Post-install update completed."
 
-# --- end4-pC reinstall --
-cd ~/.config/quickshell/
-git clone https://github.com/pctrade/end4-pC.git
-killall qs 2>/dev/null
-qs -c end4-pC >/dev/null 2>&1 &
-disown
+# Optional machine-specific shell, configured by the Lua profile.
+if [[ -n "${DOTS_SHELL_REPO:-}" && -n "${qsConfig:-}" ]]; then
+  shell_dir="$HOME/.config/quickshell/$qsConfig"
+  mkdir -p "$(dirname "$shell_dir")"
+  if [[ ! -d "$shell_dir" ]]; then
+    git clone "$DOTS_SHELL_REPO" "$shell_dir"
+  fi
+  killall qs 2>/dev/null || true
+  qs -c "$qsConfig" >/dev/null 2>&1 &
+  disown
+fi

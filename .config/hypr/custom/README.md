@@ -29,9 +29,103 @@ App helper functions return callbacks; requiring an action module registers no
 shortcuts or startup commands.
 
 Layout cycling changes only the active workspace, preferring an open special
-workspace. The existing cycle groups remain scrolling/monocle and dwindle/master;
+workspace. The cycle groups are scrolling/lua:zscroll/monocle and dwindle/master;
 switching groups selects the first layout in the group. Layout-specific shortcuts
 check that workspace's tiled layout, while `general.lua` defines the global default.
+
+`layouts/zscroll.lua` registers the `lua:zscroll` layout: a vertical tape
+of full-height rows, by default containing two half-width windows in Z order. New
+windows append; closing or floating a window compacts the remaining pairs.
+An odd final window stays half-width on the left. The focused row fills the work
+area, with normal gaps, borders, and reserved panel space applied by Hyprland.
+Focus from keyboard shortcuts, clicking a neighboring row, or an external window
+switcher reveals that row. Newly opened tiled windows on the active workspace
+receive focus and bring their row into view; background workspace launches do
+not steal focus. Deferred updates use a new one-shot timer for each event burst
+(Hyprland destroys one-shot timers after they fire).
+Each workspace keeps its own row position while unfocused. Groups occupy one slot.
+
+Edit `zscroll_options` near the top of `custom/general.lua` and reload to change:
+
+```lua
+local zscroll_options = {
+    windows_per_row = 2,          -- positive integer; each ordinary slot is 1/N wide
+    center_incomplete_rows = false, -- center every incomplete row as a group
+}
+```
+
+The `center_incomplete_rows` option centers every incomplete row,
+including two windows in a three-slot row, without stretching the windows.
+When false, incomplete rows stay left-aligned. Tagged full-width windows still
+occupy a whole row. Your current configured value is kept in `general.lua`.
+`SUPER + Semicolon` decreases `windows_per_row` (minimum 1), and
+`SUPER + Apostrophe` increases it while zscroll is active. This updates the shared
+runtime setting; other zscroll workspaces use it on their next layout update.
+Reloading restores the value in `general.lua`.
+
+For a full-width, full-height row in zscroll, add the `zscroll-full` tag through a
+normal window rule in `custom/rules.lua` (Hyprland regex matching):
+
+```lua
+-- Example
+{ match = { class = "(?i)waydroid(\\..*)?" }, tag = "zscroll-full" },
+```
+
+Copy it and replace the class regex to give another app its own full-width row. Gaps and panels
+are respected. A full-width window starts a new row and keeps target order; an
+unpaired ordinary window before it stays half-width. Pairing resumes after it.
+Up/down navigation moves by these mixed rows, and any tagged group member makes
+its whole group full-width. This tag changes zscroll geometry only; other layouts
+retain their existing sizing behavior. Reload the configuration after editing rules.
+Your outer gaps expose the neighboring rows above/below the focused row; clicking
+those visible strips selects that window and scrolls its pair into view. No extra
+preview padding is added: the visible strip depends on `gaps_out` and `gaps_in`.
+
+Z-scroll shortcuts:
+
+- `SUPER + Comma` / `Period`: next / previous row, without wrapping;
+  retain the focused column where possible.
+- `SUPER + Arrow`: spatial focus; up/down retain the column where possible.
+- `SUPER + ALT + Comma` / `Period`: move the entire focused row down / up,
+  keeping its windows together, without wrapping at the ends.
+- `SUPER + SHIFT + Comma` / `Period`: swap with the next / previous window.
+- `SUPER + SHIFT + Arrow`: swap in that direction.
+- `SUPER + mouse_up` / `mouse_down`: previous / next row (up is up, down is down),
+  for both zscroll and native scrolling.
+- `SUPER + ALT + mouse_up` / `mouse_down`: swap up / down.
+- `SUPER + BracketLeft` / `BracketRight`: shrink / grow the focused window's width.
+- `SUPER + SHIFT + BracketLeft` / `BracketRight`: swap left / right.
+- `SUPER + Semicolon` / `Apostrophe`: decrease / increase windows per row.
+
+Keyboard/wheel focus navigation centers the pointer in the newly focused window
+after row placement. Clicking row previews keeps the pointer at the click position.
+
+Whole-row moves retain focus and resized widths, including partial rows and
+full-width tagged rows. Partial-row boundaries are preserved until window order,
+membership, full-width tags, or row capacity changes; then normal packing resumes.
+
+Bracket resizing changes width by 5% of the work area per step, keeping row height
+fixed and sharing space with other slots (including empty ones) in the same row.
+Incomplete rows remain centered as a group when centering is enabled. A minimum
+slot width prevents collapse; full-width tagged rows and capacity-one rows stay
+full-width. Adjustments persist while a row's membership/order stays unchanged,
+and reset on capacity changes or config reload. Other layouts retain bracket focus
+navigation. This is keyboard-only resizing; no custom mouse-drag handler is installed.
+
+Native scrolling's resize/consume messages do not apply to zscroll.
+It uses Lua target placement and row transitions, not the native scrolling
+tape controller. Native scrolling gestures and scrolloverview integration are not
+implemented or verified for this layout. Standard fullscreen enter/exit is handled
+by Hyprland. Dragging uses the Lua layout adapter's native target ordering rather
+than arbitrary drop-to-cell placement. Vertically adjacent physical monitors may
+expose off-screen rows because this layout does not add viewport clipping.
+
+To change the default, set `general.layout = "[...]"` in `general.lua` and
+reload; to switch only the current workspace, use the existing layout cycle key
+(`SUPER + SHIFT + F23`). Run `lua custom/tests/zscroll.lua` from this directory's
+parent for geometry and navigation checks. The implementation was also checked
+on Hyprland 0.56.2 with five disposable windows for scrolling, swapping, fullscreen
+restore, and close/repacking behavior.
 
 Floating-size state is per window in `$XDG_RUNTIME_DIR` (falling back to `/tmp`),
 using a `v2` prefix and one-based indices. Old zero-based state files are ignored.
@@ -48,3 +142,44 @@ visible. Restoring moves only windows still in that holding workspace, leaving
 newly opened windows and windows manually moved elsewhere alone. Moving windows
 out and back can change their tiling order and focus. The shortcut calls the Lua
 action directly.
+
+## PC branch
+
+`end4-pC` includes the shared features from `main`. Its machine-specific Lua
+configuration lives in `custom/pc.lua`, required at the end of `custom/general.lua`.
+The laptop monitor block is absent from this branch. Edit `pc.lua` for monitor
+assignments, Firefox/special-app behavior, shell environment, and PC shortcuts.
+
+The profile requires shared rules and keybindings before applying overrides.
+The upstream loader's later `require` calls reuse those modules, so overrides
+are not overwritten. Shell startup runs after configuration loading and sees
+`qsConfig=end4-pC` and the rendering environment.
+
+PC shortcuts retain main's Super+Z visual-effects toggle, Super+C Codex,
+Super+Alt+C ChatGPT, zscroll navigation, and corrected wheel direction.
+Super+Alt+P opens Papers (there is no laptop refresh toggle on PC).
+Ctrl+Super+Z cycles scrolling/zscroll/monocle; Ctrl+Super+Shift+Z cycles
+dwindle/master. The original F23 layout shortcuts remain available.
+Super+I opens settings; Super+Tab switches DP-2/HDMI-A-1 monitor focus.
+
+The shell's editable state stays in `.config/illogical-impulse/config.json`,
+and PC Neovim pins stay in `.config/nvim/lazy-lock.json`. MIME associations
+include main's additions with Firefox replacing Zen. These native files are
+not generated or overwritten by the Lua profile.
+
+The commit-list and post-install tools read optional `DOTS_*` environment
+values set by the profile. Post-install clones the selected shell only when
+its directory is missing, then restarts it. Run these tools from the configured
+Hyprland session so they inherit that environment. The base dots updater still
+updates end-4/dots-hyprland; it does not update the PC shell checkout.
+
+Validation from `.config/hypr`:
+
+```sh
+lua custom/tests/pc.lua
+lua custom/tests/pointer.lua
+lua custom/tests/zscroll.lua
+```
+
+The PC test uses a mock Hyprland API; verify both physical displays and shell
+startup on the PC after deploying. Do not copy the PC profile to the laptop.

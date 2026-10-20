@@ -1,3 +1,2 @@
 -- Optional app overrides; loaded after hyprland/variables.lua.
 -- See that file for available globals such as terminal and browser.
-hl.env("qsConfig", "end4-pC")
