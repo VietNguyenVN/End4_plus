@@ -163,6 +163,9 @@ bind("SUPER + CTRL + Minus", function()
 	display.adjust_gaps_in(-1)
 end, "Misc: Decrease gaps_in")
 
+-- Misc
+-- rebind_cmd("ALT + Z", "~/.local/bin/drag-macro run")
+
 -- =============================================================================
 -- Keybinds: layout cycling
 -- =============================================================================

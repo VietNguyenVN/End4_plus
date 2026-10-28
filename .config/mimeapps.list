@@ -15,7 +15,7 @@ application/x-extension-xhtml=zen.desktop;
 application/x-extension-xht=zen.desktop;
 
 [Default Applications]
-application/pdf=org.gnome.Papers.desktop;
+application/pdf=okularApplication_pdf.desktop
 image/jpeg=org.gnome.Loupe.desktop;
 image/png=org.gnome.Loupe.desktop;
 text/plain=nvim.desktop
@@ -47,3 +47,5 @@ text/x-script.python=nvim.desktop;
 text/x-shellscript=nvim.desktop;
 application/x-shellscript=nvim.desktop;
 inode/directory=org.kde.dolphin.desktop;
+text/markdown=nvim.desktop
+text/x-markdown=nvim.desktop
