@@ -21,7 +21,7 @@ function M.toggle()
 	-- Reveal the regular workspace even when a scratchpad is open above it.
 	local special = hl.get_active_special_workspace()
 	if special then
-		hl.dispatch(hl.dsp.workspace.toggle_special(special.name:gsub("^special:", "")))
+		hl.dispatch(hl.dsp.workspace.toggle_special((special.name:gsub("^special:", ""))))
 	end
 
 	-- Snapshot the targets before moving: dispatching changes workspace membership.

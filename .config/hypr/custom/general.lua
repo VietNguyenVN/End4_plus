@@ -69,15 +69,15 @@ hl.animation({ leaf = "windowsMove", enabled = true, speed = 3.2, bezier = "stan
 hl.animation({ leaf = "fadeOut", enabled = true, speed = 1.2, bezier = "emphasizedAccel" })
 
 -- Scrollingoverview plugin
-hl.config({
-	plugin = {
-		scrolloverview = {
-			scale = 0.6, -- preferred overview scale
-			workspace_gap = 60,
-			layout = "horizontal", -- vertical or horizontal
-			shadow = {
-				enabled = false,
-			},
-		},
-	},
-})
+-- hl.config({
+-- 	plugin = {
+-- 		scrolloverview = {
+-- 			scale = 0.6, -- preferred overview scale
+-- 			workspace_gap = 60,
+-- 			layout = "horizontal", -- vertical or horizontal
+-- 			shadow = {
+-- 			enabled = false,
+-- 			},
+-- 		},
+-- 	},
+-- })

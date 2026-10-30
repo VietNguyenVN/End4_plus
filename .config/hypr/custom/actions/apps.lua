@@ -21,10 +21,10 @@ local function toggle_special_app(opts)
 			hl.exec_cmd(opts.command, { workspace = workspace })
 		elseif not target.workspace or target.workspace.name ~= workspace then
 			hl.dispatch(hl.dsp.focus({ window = target }))
-			hl.dispatch(hl.dsp.move({ workspace = workspace }))
+			hl.dispatch(hl.dsp.window.move({ workspace = workspace }))
 		end
 
-		hl.dispatch(hl.dsp.workspace.toggle_special(workspace:gsub("^special:", "")))
+		hl.dispatch(hl.dsp.workspace.toggle_special((workspace:gsub("^special:", ""))))
 	end
 end
 

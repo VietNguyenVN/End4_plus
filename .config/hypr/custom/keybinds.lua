@@ -65,11 +65,12 @@ rebind(
 	}, "obsidian"),
 	"App: Obsidian"
 )
-rebind_cmd("SUPER + X", "kitty nvim")
-rebind_cmd("SUPER + C", "kitty codex")
+rebind_cmd("SUPER + X", "kitty nvim", "App: Neovim")
+rebind_cmd("SUPER + C", "kitty codex", "App: Codex")
 bind_cmd("SUPER + ALT + C", "chatgpt")
 rebind_cmd("SUPER + SHIFT + T", "[float; size 1300 800; center] kitty")
 rebind_cmd("SUPER + Return", "[float; size 1300 800; center] kitty fish -c 'fastfetch; exec fish'")
+bind_cmd("SUPER + SHIFT + I", "okular", "App: Okular")
 
 -- Special workspace toggles
 rebind(
@@ -269,4 +270,4 @@ fullscreen_kitty_app("terminal-rain", "terminal-rain", "CTRL + ALT + Backslash")
 fullscreen_kitty_app("fetch", "fetch", "SUPER + ALT + Return")
 
 -- Scrolling overview
-bind("SUPER + Backspace", hl.plugin.scrolloverview.overview("toggle"))
+-- bind("SUPER + Backspace", hl.plugin.scrolloverview.overview("toggle"))
