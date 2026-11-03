@@ -270,4 +270,4 @@ fullscreen_kitty_app("terminal-rain", "terminal-rain", "CTRL + ALT + Backslash")
 fullscreen_kitty_app("fetch", "fetch", "SUPER + ALT + Return")
 
 -- Scrolling overview
--- bind("SUPER + Backspace", hl.plugin.scrolloverview.overview("toggle"))
+bind("SUPER + Backspace", hl.plugin.scrolloverview.overview("toggle"))
