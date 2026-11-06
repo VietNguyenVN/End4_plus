@@ -3,6 +3,7 @@ local desktop = require("custom.actions.desktop")
 local display = require("custom.actions.display")
 local floating = require("custom.actions.floating")
 local layout = require("custom.actions.layout")
+local scrolling = require("custom.actions.scrolling")
 local zscroll = require("custom.layouts.zscroll")
 local shell = require("custom.actions.shell")
 
@@ -218,6 +219,13 @@ bind("SUPER + ALT + Period", layout.bind("scrolling", "swapcol l"))
 
 bind("SUPER + Semicolon", layout.bind("scrolling", "colresize +0.1"))
 bind("SUPER + Apostrophe", layout.bind("scrolling", "colresize -0.1"))
+
+bind("SUPER + SHIFT + Semicolon", function()
+	scrolling.resize(-50)
+end)
+bind("SUPER + SHIFT + Apostrophe", function()
+	scrolling.resize(50)
+end)
 
 bind("SUPER + SHIFT + BracketLeft", hl.dsp.window.move({ direction = "l" }))
 bind("SUPER + SHIFT + BracketRight", hl.dsp.window.move({ direction = "r" }))
