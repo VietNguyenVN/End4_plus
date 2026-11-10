@@ -3,6 +3,7 @@ local desktop = require("custom.actions.desktop")
 local display = require("custom.actions.display")
 local floating = require("custom.actions.floating")
 local layout = require("custom.actions.layout")
+local scrolling = require("custom.actions.scrolling")
 local zscroll = require("custom.layouts.zscroll")
 local shell = require("custom.actions.shell")
 
@@ -65,11 +66,12 @@ rebind(
 	}, "obsidian"),
 	"App: Obsidian"
 )
-rebind_cmd("SUPER + X", "kitty nvim")
-rebind_cmd("SUPER + C", "kitty codex")
+rebind_cmd("SUPER + X", "kitty nvim", "App: Neovim")
+rebind_cmd("SUPER + C", "kitty codex", "App: Codex")
 bind_cmd("SUPER + ALT + C", "chatgpt")
 rebind_cmd("SUPER + SHIFT + T", "[float; size 1300 800; center] kitty")
 rebind_cmd("SUPER + Return", "[float; size 1300 800; center] kitty fish -c 'fastfetch; exec fish'")
+bind_cmd("SUPER + SHIFT + I", "okular", "App: Okular")
 
 -- Special workspace toggles
 rebind(
@@ -96,6 +98,10 @@ rebind("CTRL + SHIFT + Escape", apps.toggle_special_term("special:btop", "btop",
 
 -- Fcitx5
 bind("SUPER + Backslash", apps.toggle_fcitx5, "App: Toggle fcitx5")
+
+-- Workspace scrolling: up goes left, down goes right.
+rebind("SUPER + SHIFT + mouse_up", hl.dsp.focus({ workspace = "r-1" }))
+rebind("SUPER + SHIFT + mouse_down", hl.dsp.focus({ workspace = "r+1" }))
 
 -- =============================================================================
 -- Keybinds: shell
@@ -163,6 +169,9 @@ bind("SUPER + CTRL + Minus", function()
 	display.adjust_gaps_in(-1)
 end, "Misc: Decrease gaps_in")
 
+-- Misc
+-- rebind_cmd("ALT + Z", "~/.local/bin/drag-macro run")
+
 -- =============================================================================
 -- Keybinds: layout cycling
 -- =============================================================================
@@ -215,13 +224,18 @@ bind("SUPER + ALT + Period", layout.bind("scrolling", "swapcol l"))
 bind("SUPER + Semicolon", layout.bind("scrolling", "colresize +0.1"))
 bind("SUPER + Apostrophe", layout.bind("scrolling", "colresize -0.1"))
 
+bind("SUPER + SHIFT + Semicolon", function()
+	scrolling.resize(-50)
+end)
+bind("SUPER + SHIFT + Apostrophe", function()
+	scrolling.resize(50)
+end)
+
 bind("SUPER + SHIFT + BracketLeft", hl.dsp.window.move({ direction = "l" }))
 bind("SUPER + SHIFT + BracketRight", hl.dsp.window.move({ direction = "r" }))
 
 rebind("SUPER + mouse_up", layout.bind("scrolling", "focus u"))
 rebind("SUPER + mouse_down", layout.bind("scrolling", "focus d"))
-rebind("SUPER + SHIFT + mouse_up", hl.dsp.focus({ workspace = "r+1" }))
-rebind("SUPER + SHIFT + mouse_down", hl.dsp.focus({ workspace = "r-1" }))
 rebind("SUPER + ALT + mouse_up", layout.bind("scrolling", "swapcol l"))
 rebind("SUPER + ALT + mouse_down", layout.bind("scrolling", "swapcol r"))
 rebind("CTRL + SUPER + mouse_up", layout.bind("scrolling", "colresize -0.1"))
