@@ -99,6 +99,10 @@ rebind("CTRL + SHIFT + Escape", apps.toggle_special_term("special:btop", "btop",
 -- Fcitx5
 bind("SUPER + Backslash", apps.toggle_fcitx5, "App: Toggle fcitx5")
 
+-- Workspace scrolling: up goes left, down goes right.
+rebind("SUPER + SHIFT + mouse_up", hl.dsp.focus({ workspace = "r-1" }))
+rebind("SUPER + SHIFT + mouse_down", hl.dsp.focus({ workspace = "r+1" }))
+
 -- =============================================================================
 -- Keybinds: shell
 -- =============================================================================
@@ -232,8 +236,6 @@ bind("SUPER + SHIFT + BracketRight", hl.dsp.window.move({ direction = "r" }))
 
 rebind("SUPER + mouse_up", layout.bind("scrolling", "focus u"))
 rebind("SUPER + mouse_down", layout.bind("scrolling", "focus d"))
-rebind("SUPER + SHIFT + mouse_up", hl.dsp.focus({ workspace = "r+1" }))
-rebind("SUPER + SHIFT + mouse_down", hl.dsp.focus({ workspace = "r-1" }))
 rebind("SUPER + ALT + mouse_up", layout.bind("scrolling", "swapcol l"))
 rebind("SUPER + ALT + mouse_down", layout.bind("scrolling", "swapcol r"))
 rebind("CTRL + SUPER + mouse_up", layout.bind("scrolling", "colresize -0.1"))
