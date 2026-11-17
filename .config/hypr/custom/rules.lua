@@ -1,4 +1,9 @@
 local window_rules = {
+	-- Float the Hyprland portal's screen-sharing picker.
+	{
+		match = { class = "^hyprland-share-picker$" },
+		float = true,
+	},
 	{
 		match = {
 			class = ".*",
