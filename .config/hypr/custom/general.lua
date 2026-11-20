@@ -26,7 +26,7 @@ hl.config({
 	decoration = {
 		blur = {
 			xray = false,
-			-- Blur translucent menus, leaving their faint shadows unblurred.
+			-- Blur translucent Wayland menus, leaving faint shadows unblurred.
 			popups = true,
 			popups_ignorealpha = 0.2,
 		},
