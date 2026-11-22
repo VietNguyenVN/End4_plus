@@ -124,7 +124,7 @@ Apps	SUPER + SHIFT + I	exec	okular	Okular
 Shell	SUPER + ALT + D	shell	dock toggle	Toggle dock		
 Shell	SUPER + ALT + K	shell	clock toggle	Toggle desktop clock		
 Apps	SUPER + ALT + P	exec	papers	Document Viewer		
-Misc	SUPER + U	exec	kitty env DOTS_COMMIT_OWNER=pctrade DOTS_COMMIT_REPO=end4pC-cpp-beta ~/.config/hypr/custom/tools/printdotscommits.sh	View end4pC commits		
+Misc	SUPER + U	exec	kitty "$HOME/.config/hypr/custom/tools/printdotscommits.sh"	View end4pC commits		
 Misc	SUPER + SHIFT + U	exec	kitty fish --no-config "$HOME/.config/hypr/custom/tools/update-end4pc.fish"	Update end4pC		
 Misc	SUPER + Y	exec	kitty ~/.config/hypr/custom/tools/archstatusprint.sh	Arch service status		
 Misc	SUPER + SHIFT + Y	exec	kitty sh -c 'topgrade && cachy-update'	Update system		
