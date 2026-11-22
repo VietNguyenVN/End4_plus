@@ -7,9 +7,12 @@ https://github.com/user-attachments/assets/49c4bd63-1e22-40dd-95e0-bc4c3e90a520
 
 ## end4pC C++ setup
 
-This branch snapshots my PC configuration for the [end4pC C++ shell](https://github.com/pctrade/end4pC-cpp-beta).
-Build or install the shell at `~/.config/end4pC` first. Back up your own dotfiles, then merge the files under `.config/` into `~/.config/`.
-Copy `.local/share/end4pC/config.json` to the shell's data directory to restore the shell settings, and copy the preset if you want it available in Settings.
+This branch contains my personal overrides for the [end4pC C++ shell](https://github.com/pctrade/end4pC-cpp-beta).
+
+1. Install end4pC and its Hyprland dotfiles. This branch depends on that base and expects the shell at `~/.config/end4pC`.
+2. Back up your dotfiles, then overlay the files under `.config/` onto `~/.config/`. Keep the other files from the end4pC installer.
+3. To restore my shell settings, copy `.local/share/end4pC/config.json` into the shell's data directory. Copy the preset into its `presets/` subdirectory if you want it available in Settings.
+
 The monitor rules are for my DP-2 and HDMI-A-1 outputs. Adjust them for your hardware before reloading Hyprland.
 
 ## Meet zscroll — my own Hyprland layout
