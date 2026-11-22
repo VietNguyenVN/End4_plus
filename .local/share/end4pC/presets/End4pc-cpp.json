@@ -1,0 +1,305 @@
+{
+  "workspaces": 10,
+  "frame": 0,
+  "barOpacity": 75,
+  "notchWidth": 85,
+  "islandRounding": 30,
+  "fakeRounding": 0,
+  "barFollowsFrame": 0,
+  "frameColor": "black",
+  "fakeRoundingSize": 24,
+  "centeredWallpaper": 0,
+  "centeredWallpaperSize": 800,
+  "centeredWallpaperShape": "Circle",
+  "centeredWallpaperColor": "outline_variant",
+  "collage": 0,
+  "collageGap": 30,
+  "collageMargin": 30,
+  "collageRadius": 30,
+  "collageBlur": 50,
+  "collagePrimary": 1,
+  "collageTree": "{\"t\":\"leaf\",\"id\":1,\"img\":\"\"}",
+  "networkAlways": 1,
+  "networkSpeed": 0,
+  "notificationAppIcons": 1,
+  "conflictCheck": 1,
+  "overviewLive": 1,
+  "overviewLauncher": 1,
+  "switcherStyle": "grid",
+  "overviewIcon": "right",
+  "overviewPosition": "right",
+  "privacyAlways": 0,
+  "privacyMic": 1,
+  "privacyCam": 1,
+  "privacyScreen": 1,
+  "barSpacing": 4,
+  "barShadow": 1,
+  "dividerSpacing": 10,
+  "sideBarSpacing": 0,
+  "animEnabled": 1,
+  "animSpeed": 100,
+  "animStyle": "boing",
+  "hotCorners": 1,
+  "hotCornerWidth": 6,
+  "hotCornerHeight": 6,
+  "hotCornerVisible": 0,
+  "hotCornerHover": 0,
+  "updatesMinShow": 0,
+  "barPosition": "left",
+  "barStyle": "island",
+  "workspaceNumbers": "normal",
+  "dynamicIsland": 0,
+  "islandClick": 0,
+  "groupStyle": "free",
+  "lockAnimation": "shape",
+  "groupSpacing": 2,
+  "groupColor": "surface_container_high",
+  "groupFree": "island",
+  "islandView": "media",
+  "workspaceStyle": "bar",
+  "colorScheme": "scheme-neutral",
+  "colorMode": "dark",
+  "wallpaperDir": "~/Pictures/Wallpapers",
+  "selectorFolders": "sidebar",
+  "wallpaperTransition": "none",
+  "wallpaperTransitionMs": 700,
+  "wallpaperAuto": 0,
+  "wallpaperAutoFavs": 0,
+  "wallpaperAutoMin": 30,
+  "selectorShape": "Cookie9Sided",
+  "notificationShape": "Cookie9Sided",
+  "weatherTheme": 1,
+  "materialIcons": 0,
+  "iconScale": 100,
+  "fontWeightText": 450,
+  "fontWeightTitle": 550,
+  "launcherFiles": 0,
+  "notificationPosition": "top_right",
+  "clockDate": 0,
+  "workspaceApps": 0,
+  "batteryPercent": 0,
+  "templateKitty": 1,
+  "templateGtk": 1,
+  "templateKde": 1,
+  "barClock": "outline",
+  "fontFamily": "Google Sans Flex",
+  "widgetStyles": "activewindow=plain,power=m3,tools=plain,aiusage=outline,network=plain,weather=outline,settings=pill,updates=plain,notifications=dot,battery=m3,volume=plain,launcher=plain,avatar=plain,visualizer=reflect,quickactions=plain,keyboard=badge,media=plain",
+  "sideWidgetStyles": "tools=plain,power=plain,launcher=plain,activewindow=plain,weather=plain,keyboard=plain,media=m3,avatar=plain,workspaces=bar,notifications=plain,network=m3soft,resources=text,clock=outline",
+  "resCpu": 1,
+  "resRam": 1,
+  "resTemp": 1,
+  "resDisk": 0,
+  "resSwap": 1,
+  "resValue": 0,
+  "resInterval": 3000,
+  "resWarnMem": 95,
+  "resWarnSwap": 85,
+  "resWarnCpu": 90,
+  "resStyle": "text",
+  "dividerStyle": "line",
+  "clockStyle": "digital",
+  "theme": "",
+  "quickActions": "perfprofile",
+  "cookieSides": 13,
+  "cookieTime": 0,
+  "cookieDial": "numbers",
+  "cookieHour": "hollow",
+  "cookieMinute": "medium",
+  "cookieSecond": "hide",
+  "cookieDate": "bubble",
+  "themePrimary": "iris",
+  "themeSecondary": "foam",
+  "themeTertiary": "pink",
+  "clockDaily": "badge",
+  "clockPixel": "horizontal",
+  "cornerTL": "launcher",
+  "cornerTR": "controlcenter",
+  "cornerBL": "media",
+  "cornerBR": "wallpapers",
+  "customImagePath": "/home/vietnguyenx/Pictures/Wallpapers/0246.png",
+  "layout": {
+    "left": [
+      "avatar",
+      "launcher",
+      "workspaces",
+      "weather",
+      "systray"
+    ],
+    "center": [],
+    "right": [
+      "quickactions",
+      "network",
+      "volume",
+      "battery",
+      "clock",
+      "notifications",
+      "tools",
+      "power"
+    ]
+  },
+  "sideLayout": {
+    "left": [
+      "avatar",
+      "divider",
+      "docktopanel",
+      "divider",
+      "workspaces",
+      "divider",
+      "activewindow"
+    ],
+    "center": [
+      "visualizer",
+      "media",
+      "visualizer"
+    ],
+    "right": [
+      "systray",
+      "privacy",
+      "notifications",
+      "divider",
+      "clock"
+    ]
+  },
+  "accent": "",
+  "widgetsLocked": 1,
+  "widgetShadow": 1,
+  "widgetGap": 12,
+  "deskVizStyle": "ring",
+  "deskVizPos": "bottom",
+  "deskVizColor": "gradient",
+  "deskVizSize": 260,
+  "deskVizBars": 96,
+  "customTextFont": "Caveat",
+  "customTextFontName": "",
+  "customTextColor": "on_surface",
+  "customTextAlign": "center",
+  "customTextFit": 1,
+  "customTextSize": 56,
+  "customTextBold": 0,
+  "customTextItalic": 0,
+  "customTextShadow": 1,
+  "calendarMonday": 1,
+  "barBackground": 0,
+  "trayPinDefault": 1,
+  "trayTint": 0,
+  "borderColor": 0,
+  "borderActive": "primary",
+  "borderActiveOpacity": 47,
+  "borderInactive": "outline_variant",
+  "borderInactiveOpacity": 20,
+  "systray": 0,
+  "uiBackground": "oled",
+  "dock": 0,
+  "dockIconSize": 28,
+  "dockMagnify": 0,
+  "dockMagnification": 140,
+  "dockAutoHide": 0,
+  "dockPin": 0,
+  "dockMedia": 1,
+  "dockLauncher": 0,
+  "dockHug": 0,
+  "dockRounding": 20,
+  "dockSpacing": 12,
+  "dockBorder": 0,
+  "dockBorderColor": "outline_variant",
+  "dockPosition": "bottom",
+  "dockScreen": "HDMI-A-1",
+  "osdPosition": "left",
+  "osdTimeout": 2000,
+  "iconStyle": "broken",
+  "_widgets": {
+    "todo": {
+      "enabled": 0,
+      "size": [
+        487,
+        453
+      ],
+      "pos": [
+        1041,
+        179
+      ]
+    },
+    "weather": {
+      "enabled": 1,
+      "size": [
+        360,
+        212
+      ],
+      "pos": [
+        1390,
+        192
+      ]
+    },
+    "player": {
+      "enabled": 0,
+      "size": [
+        340,
+        340
+      ],
+      "pos": [
+        65,
+        570
+      ]
+    },
+    "resources": {
+      "enabled": 1,
+      "size": [
+        357,
+        239
+      ],
+      "pos": [
+        1077,
+        696
+      ]
+    },
+    "calendar": {
+      "enabled": 1,
+      "size": [
+        358,
+        300
+      ],
+      "pos": [
+        1494,
+        469
+      ]
+    },
+    "clock": {
+      "enabled": 1,
+      "size": [
+        262,
+        196
+      ],
+      "pos": [
+        225,
+        547
+      ]
+    },
+    "usercard": {
+      "enabled": 1,
+      "size": [
+        300,
+        240
+      ],
+      "pos": [
+        181,
+        201
+      ]
+    },
+    "image": {
+      "enabled": 1,
+      "size": [
+        334,
+        135
+      ],
+      "pos": [
+        799,
+        106
+      ]
+    }
+  },
+  "_preset": {
+    "description": "",
+    "wallpaper": "/home/vietnguyenx/Pictures/Wallpapers/0279.jpg",
+    "saved": 1795342115
+  }
+}

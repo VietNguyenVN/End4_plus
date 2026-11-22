@@ -1,15 +1,8 @@
 local window_rules = {
+	-- Float the Hyprland portal's screen-sharing picker.
 	{
-		match = {
-			class = ".*",
-		},
-		opacity = "0.89 override 0.89 override",
-	},
-	{
-		match = {
-			class = ".*",
-		},
-		no_blur = false,
+		match = { class = "^hyprland-share-picker$" },
+		float = true,
 	},
 	-- Keep Document Viewer mostly opaque.
 	{
@@ -46,4 +39,4 @@ for _, rule in ipairs(window_rules) do
 	hl.window_rule(rule)
 end
 
-require("custom.actions.display").apply_gaps()
+require("custom.actions.display").restore_gaps()

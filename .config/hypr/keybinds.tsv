@@ -1,0 +1,114 @@
+# end4pC keybinds. One bind per line, fields separated by a tab:
+#   category  keys  action  argument  name  flags  repeat
+# action: exec shell close float fullscreen fullscreen_state focus_dir move_dir workspace movews movews_silent movews_plain special movespecial drag resize layout lua
+# flags: l works when locked, r repeats when held, e on key release, m mouse bind, n keeps the key for the app, h alternate (hidden by default), d disabled
+# repeat: num / pad run the line for the number row / the keypad (the # in keys and argument is the digit 1..10)
+# Edit these in Tools > Keybinds. Your own copy lives in ~/.config/hypr/keybinds.tsv (delete it to go back to this one).
+Shell	CTRL + SUPER + T	shell	selector toggle	Wallpaper Selector		
+Shell	SUPER + Super_L	shell	launcher toggle	Launcher	e	
+Shell	SUPER + V	shell	launcher clipboard	Clipboard history		
+Shell	SUPER + M	shell	media toggle	Media Player		
+Shell	SUPER + Escape	shell	settings	Settings		
+Shell	SUPER + SHIFT + Escape	shell	forcequit	Force quit		
+Shell	SUPER + SHIFT + Backspace	shell	overview	Overview		
+Shell	SUPER + slash	shell	tools	Tools		
+Shell	CTRL + ALT + Delete	shell	power toggle	Power Menu		
+Shell	SUPER + G	shell	game toggle	Game overlay		
+Shell	SUPER + K	shell	osk toggle	On-screen keyboard		
+Shell	SUPER + Equal	shell	magnifier in	Zoom in	r	
+Shell	SUPER + Minus	shell	magnifier out	Zoom out	r	
+Shell	SUPER + code:86	shell	magnifier in	Zoom in (keypad +)	rh	
+Shell	SUPER + code:82	shell	magnifier out	Zoom out (keypad -)	rh	
+Shell	CTRL + SUPER + R	exec	bash $HOME/.config/end4pC/scripts/restart.sh	Restart the Shell		
+Shell	ALT + Tab	shell	switcher next	Window Switcher	r	
+Shell	ALT + SHIFT + Tab	shell	switcher prev	Window Switcher (Back)	r	
+Shell	XF86MonBrightnessUp	shell	brightness up	Brightness Up	lr	
+Shell	XF86MonBrightnessDown	shell	brightness down	Brightness Down	lr	
+Apps	SUPER + Return	exec	{terminal}	Terminal	d	
+Apps	CTRL + ALT + T	exec	{terminal}	Terminal (alternate)	h	
+Apps	SUPER + E	exec	{fileManager}	File manager		
+Apps	SUPER + C	exec	{codeEditor}	Code editor	d	
+Apps	SUPER + X	exec	{textEditor}	Text editor	d	
+Apps	CTRL + SUPER + V	exec	{volumeMixer}	Volume mixer		
+Apps	SUPER + I	exec	{settingsApp}	Settings app		
+Apps	CTRL + SHIFT + Escape	shell	tasks	Task manager		
+Apps	CTRL + SUPER + SHIFT + ALT + W	exec	{officeSoftware}	Office software		
+Screenshots & Tools	SUPER + SHIFT + S	shell	screenshot region	Screenshot (Region)		
+Screenshots & Tools	SUPER + ALT + S	shell	screenshot edit	Screenshot (Region, Edit in Swappy)		
+Screenshots & Tools	SUPER + SHIFT + A	shell	screenshot lens	Google Lens (Region)		
+Screenshots & Tools	SUPER + ALT + SHIFT + R	shell	screenshot qr	Read a QR code (Region)		
+Screenshots & Tools	SUPER + SHIFT + R	shell	quick 1	Record Screen	l	
+Screenshots & Tools	Print	exec	grim -o "$(hyprctl activeworkspace -j | jq -r '.monitor')" - | wl-copy	Screenshot	l	
+Screenshots & Tools	CTRL + Print	exec	mkdir -p $(xdg-user-dir PICTURES)/Screenshots && f=$(xdg-user-dir PICTURES)/Screenshots/Screenshot_"$(date '+%Y-%m-%d_%H.%M.%S')".png && grim -o "$(hyprctl activeworkspace -j | jq -r '.monitor')" "$f" && wl-copy < "$f"	Screenshot (save to file)	l	
+Screenshots & Tools	SUPER + SHIFT + X	exec	pidof slurp || grim -g "$(slurp $SLURP_ARGS)" "/tmp/ocr_image.png" && tesseract "/tmp/ocr_image.png" stdout -l $(tesseract --list-langs | awk 'NR>1{print $1}' | tr '\\\\n' '+' | sed 's/\\\\+$/\\\\n/') | wl-copy && rm "/tmp/ocr_image.png"	Character recognition (OCR)		
+Screenshots & Tools	SUPER + SHIFT + C	exec	hyprpicker -a	Pick color		
+Screenshots & Tools	SUPER + SHIFT + ALT + mouse:273	exec	$HOME/.config/hypr/hyprland/scripts/ai/primary-buffer-query.sh	Generate AI summary for selected text		
+Media & Volume	XF86AudioRaiseVolume	exec	wpctl set-volume @DEFAULT_AUDIO_SINK@ 2%+ -l 1.5	Volume up	lr	
+Media & Volume	XF86AudioLowerVolume	exec	wpctl set-volume @DEFAULT_AUDIO_SINK@ 2%-	Volume down	lr	
+Media & Volume	XF86AudioMute	exec	wpctl set-mute @DEFAULT_SINK@ toggle	Toggle mute	l	
+Media & Volume	SUPER + SHIFT + M	exec	wpctl set-mute @DEFAULT_SINK@ toggle	Toggle mute	l	
+Media & Volume	SUPER + ALT + M	exec	wpctl set-mute @DEFAULT_SOURCE@ toggle	Toggle mic	l	
+Media & Volume	XF86AudioMicMute	exec	wpctl set-mute @DEFAULT_SOURCE@ toggle	Toggle mic (key)	lh	
+Media & Volume	ALT + XF86AudioMute	exec	wpctl set-mute @DEFAULT_SOURCE@ toggle	Toggle mic (alternate)	lh	
+Media & Volume	CTRL + SUPER + SHIFT + mouse_up	exec	wpctl set-volume @DEFAULT_AUDIO_SINK@ 2%+ -l 1.5	Volume up (scroll)		
+Media & Volume	CTRL + SUPER + SHIFT + mouse_down	exec	wpctl set-volume @DEFAULT_AUDIO_SINK@ 2%-	Volume down (scroll)		
+Media & Volume	SUPER + SHIFT + N	exec	playerctl next || playerctl position `bc <<< "100 * $(playerctl metadata mpris:length) / 1000000 / 100"`	Next track	l	
+Media & Volume	SUPER + SHIFT + B	exec	playerctl previous	Previous track	l	
+Media & Volume	SUPER + SHIFT + P	exec	playerctl play-pause	Play/pause media	l	
+Media & Volume	XF86AudioNext	exec	playerctl next || playerctl position `bc <<< "100 * $(playerctl metadata mpris:length) / 1000000 / 100"`	Next track (key)	lh	
+Media & Volume	XF86AudioPrev	exec	playerctl previous	Previous track (key)	lh	
+Media & Volume	XF86AudioPlay	exec	playerctl play-pause	Play/pause (key)	lh	
+Media & Volume	XF86AudioPause	exec	playerctl play-pause	Pause (key)	lh	
+Media & Volume	SUPER + SHIFT + ALT + mouse:275	exec	playerctl previous	Previous track (mouse)	h	
+Media & Volume	SUPER + SHIFT + ALT + mouse:276	exec	playerctl next || playerctl position `bc <<< "100 * $(playerctl metadata mpris:length) / 1000000 / 100"`	Next track (mouse)	h	
+Windows	SUPER + mouse:272	drag		Move window	m	
+Windows	SUPER + mouse:273	resize		Resize window	m	
+Windows	SUPER + mouse:274	drag		Move window (middle click)	mh	
+Windows	SUPER + Left	focus_dir	l	Focus left	d	
+Windows	SUPER + Right	focus_dir	r	Focus right	d	
+Windows	SUPER + Up	focus_dir	u	Focus up	d	
+Windows	SUPER + Down	focus_dir	d	Focus down	d	
+Windows	SUPER + BracketLeft	focus_dir	l	Focus left (bracket)	hd	
+Windows	SUPER + BracketRight	focus_dir	r	Focus right (bracket)	hd	
+Windows	SUPER + SHIFT + Left	move_dir	l	Move window left	d	
+Windows	SUPER + SHIFT + Right	move_dir	r	Move window right	d	
+Windows	SUPER + SHIFT + Up	move_dir	u	Move window up	d	
+Windows	SUPER + SHIFT + Down	move_dir	d	Move window down	d	
+Windows	SUPER + Q	close		Close		
+Windows	SUPER + SHIFT + ALT + Q	exec	hyprctl kill	Forcefully zap a window		
+Windows	ALT + F4	exec	notify-send "Wrong close keybind" "Use Super+Q" -a Hyprland	Wrong close keybind notice	nh	
+Apps	SUPER + T	exec	{terminal}	Terminal		
+Windows	SUPER + F	fullscreen	fullscreen	Fullscreen		
+Windows	SUPER + ALT + F	fullscreen_state	0 3	Fullscreen spoof		
+Windows	SUPER + Semicolon	layout	splitratio -0.1	Decrease split ratio	rd	
+Windows	SUPER + Apostrophe	layout	splitratio +0.1	Increase split ratio	rd	
+Windows	SUPER + SHIFT + #	movews	#	Send to workspace (follow)		num
+Windows	SUPER + ALT + #	movews_silent	#	Send to workspace (stay)	d	pad
+Windows	SUPER + ALT + Page_Down	movews_plain	+1	Send to next workspace	h	
+Windows	SUPER + ALT + Page_Up	movews_plain	-1	Send to previous workspace	h	
+Windows	SUPER + SHIFT + Page_Down	movews_plain	r+1	Send to next workspace (relative)	h	
+Windows	SUPER + SHIFT + Page_Up	movews_plain	r-1	Send to previous workspace (relative)	h	
+Windows	CTRL + SUPER + SHIFT + Right	movews_plain	r+1	Send to workspace on the right	h	
+Windows	CTRL + SUPER + SHIFT + Left	movews_plain	r-1	Send to workspace on the left	h	
+Windows	SUPER + ALT + Z	movespecial	special:special	Send to scratchpad		
+Workspaces	SUPER + #	workspace	#	Focus workspace		num
+Workspaces	SUPER + #	workspace	#	Focus workspace (keypad)	h	pad
+Workspaces	CTRL + SUPER + Right	workspace	r+1	Focus workspace on the right		
+Workspaces	CTRL + SUPER + Left	workspace	r-1	Focus workspace on the left		
+Workspaces	CTRL + SUPER + ALT + Right	workspace	m+1	Focus next workspace (monitor)		
+Workspaces	CTRL + SUPER + ALT + Left	workspace	m-1	Focus previous workspace (monitor)		
+Workspaces	SUPER + Page_Down	workspace	r+1	Focus workspace on the right (page key)		
+Workspaces	SUPER + Page_Up	workspace	r-1	Focus workspace on the left (page key)		
+Workspaces	CTRL + SUPER + Page_Down	workspace	r+1	Focus workspace on the right (page key)	h	
+Workspaces	CTRL + SUPER + Page_Up	workspace	r-1	Focus workspace on the left (page key)	h	
+Workspaces	CTRL + SUPER + BracketLeft	workspace	-1	Previous workspace	h	
+Workspaces	CTRL + SUPER + BracketRight	workspace	+1	Next workspace	h	
+Workspaces	CTRL + SUPER + Up	workspace	r-5	Five workspaces back	h	
+Workspaces	CTRL + SUPER + Down	workspace	r+5	Five workspaces forward	h	
+Workspaces	SUPER + S	special	special	Toggle scratchpad		
+Workspaces	CTRL + SUPER + S	special	special	Toggle scratchpad (alternate)	h	
+Workspaces	SUPER + mouse:275	special	special	Toggle scratchpad (mouse)	h	
+Session	SUPER + L	exec	{lock}	Lock Screen	d	
+Session	SUPER + CTRL + L	exec	{lock}	Lock Screen (alternate)	h	
+Session	SUPER + SHIFT + L	exec	systemctl suspend || loginctl suspend	Suspend system	l	
+Session	CTRL + SHIFT + ALT + SUPER + Delete	exec	systemctl poweroff || loginctl poweroff	Shutdown	h	

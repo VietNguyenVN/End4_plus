@@ -5,7 +5,6 @@ local floating = require("custom.actions.floating")
 local layout = require("custom.actions.layout")
 local scrolling = require("custom.actions.scrolling")
 local zscroll = require("custom.layouts.zscroll")
-local shell = require("custom.actions.shell")
 
 local COPILOT_KEY = "SUPER + SHIFT + F23"
 
@@ -31,10 +30,6 @@ local function bind_cmd(key, command, description)
 	bind(key, hl.dsp.exec_cmd(command), description)
 end
 
-local function bind_global(key, name, description)
-	bind(key, hl.dsp.global(name), description)
-end
-
 -- Register a fullscreen kitty app with a matching window rule.
 local function fullscreen_kitty_app(class, command, key)
 	bind_cmd(key, string.format("kitty --class %s %s", class, command))
@@ -45,10 +40,9 @@ end
 -- Keybinds: system / session
 -- =============================================================================
 
-bind_cmd("SUPER + SHIFT + Q", "pkill -9 -f $(hyprctl activewindow -j | jq -r .class)")
-bind_global("CTRL + ALT + Backspace", "quickshell:sessionToggle")
-bind_cmd("SUPER + ALT + L", "loginctl lock-session")
-hl.unbind("SUPER + L")
+bind_cmd("SUPER + ALT + L", "loginctl lock-session", "Session: Lock")
+bind_cmd("CTRL + ALT + Backspace", 'end4pC "power toggle"', "Session: Power menu")
+bind_cmd("SUPER + SHIFT + Q", [[pid=$(hyprctl activewindow -j | jq -er '.pid | select(type == "number" and . > 1 and . == floor)') && kill -KILL "$pid"]], "Window: Force quit focused app")
 rebind("SUPER + ALT + H", desktop.toggle)
 
 -- =============================================================================
@@ -56,8 +50,8 @@ rebind("SUPER + ALT + H", desktop.toggle)
 -- =============================================================================
 
 bind_cmd("SUPER + SHIFT + E", "[float; size 1300 800; center] dolphin")
-rebind("SUPER + W", apps.focus_or_launch_zen(false), "App: Browser")
-rebind("SUPER + SHIFT + W", apps.focus_or_launch_zen(true))
+rebind("SUPER + W", apps.focus_or_launch_firefox(false), "App: Browser")
+rebind("SUPER + SHIFT + W", apps.focus_or_launch_firefox(true))
 rebind(
 	"SUPER + SHIFT + O",
 	apps.focus_or_launch({
@@ -70,7 +64,7 @@ rebind_cmd("SUPER + X", "kitty nvim", "App: Neovim")
 rebind_cmd("SUPER + C", "kitty codex", "App: Codex")
 bind_cmd("SUPER + ALT + C", "chatgpt")
 rebind_cmd("SUPER + SHIFT + T", "[float; size 1300 800; center] kitty")
-rebind_cmd("SUPER + Return", "[float; size 1300 800; center] kitty fish -c 'fastfetch; exec fish'")
+rebind_cmd("SUPER + Return", "[float; size 1300 800; center] kitty fish -c 'fastfetch; exec fish'", "App: Terminal")
 bind_cmd("SUPER + SHIFT + I", "okular", "App: Okular")
 
 -- Special workspace toggles
@@ -78,6 +72,7 @@ rebind(
 	"SUPER + O",
 	apps.toggle_special_app({
 		workspace = "special:vesktop",
+		monitor = "HDMI-A-1",
 		command = "vesktop",
 		class = "vesktop",
 	}),
@@ -88,13 +83,12 @@ rebind(
 	"SUPER + A",
 	apps.toggle_special_app({
 		workspace = "special:spotify",
+		monitor = "HDMI-A-1",
 		command = "spotify-launcher",
 		class = "spotify",
 	}),
 	"App: Spotify"
 )
-
-rebind("CTRL + SHIFT + Escape", apps.toggle_special_term("special:btop", "btop", "kitty btop"))
 
 -- Fcitx5
 bind("SUPER + Backslash", apps.toggle_fcitx5, "App: Toggle fcitx5")
@@ -103,23 +97,41 @@ bind("SUPER + Backslash", apps.toggle_fcitx5, "App: Toggle fcitx5")
 rebind("SUPER + SHIFT + mouse_up", hl.dsp.focus({ workspace = "r-1" }))
 rebind("SUPER + SHIFT + mouse_down", hl.dsp.focus({ workspace = "r+1" }))
 
+-- Number keys select a workspace within the active group of ten.
+local number_keys = { 10, 11, 12, 13, 14, 15, 16, 17, 18, 19 }
+local keypad_keys = { 87, 88, 89, 83, 84, 85, 79, 80, 81, 90 }
+for i, keycode in ipairs(number_keys) do
+	local function send_to_workspace()
+		local active = hl.get_active_workspace()
+		if not active or active.id < 1 then return end
+		local target = math.floor((active.id - 1) / 10) * 10 + i
+		hl.dispatch(hl.dsp.window.move({ workspace = target, follow = false }))
+	end
+	bind("SUPER + ALT + code:" .. keycode, send_to_workspace, "Window: Send to workspace " .. (i % 10))
+	bind("SUPER + ALT + code:" .. keypad_keys[i], send_to_workspace)
+end
+
 -- =============================================================================
 -- Keybinds: shell
 -- =============================================================================
 
-bind("SUPER + ALT + D", shell.toggle_dock, "Shell: Toggle dock")
-bind("SUPER + ALT + K", shell.toggle_clock, "Shell: Toggle clock")
-bind_global("SUPER + ALT + J", "quickshell:barToggle", "Shell: Toggle bar")
-bind("SUPER + ALT + P", display.toggle_refresh, "Misc: Change refresh rate")
+bind_cmd("SUPER + ALT + D", 'end4pC "dock toggle"', "Shell: Toggle dock")
+bind_cmd("SUPER + ALT + K", 'end4pC "clock toggle"', "Shell: Toggle desktop clock")
+bind_cmd("SUPER + ALT + P", "papers", "App: Document Viewer")
 
--- =============================================================================
--- Keybinds: scripts / maintenance
--- =============================================================================
+-- Keep the PC maintenance shortcuts on their original chords.
+bind_cmd("SUPER + U", "kitty env DOTS_COMMIT_OWNER=pctrade DOTS_COMMIT_REPO=end4pC-cpp-beta ~/.config/hypr/custom/tools/printdotscommits.sh", "Maintenance: View end4pC commits")
+bind_cmd("SUPER + SHIFT + U", "kitty end4pC update", "Maintenance: Update end4pC")
+bind_cmd("SUPER + Y", "kitty ~/.config/hypr/custom/tools/archstatusprint.sh", "Maintenance: Arch service status")
+bind_cmd("SUPER + SHIFT + Y", "kitty sh -c 'topgrade && cachy-update'", "Maintenance: Update system")
 
-bind_cmd("SUPER + U", "kitty ~/.config/hypr/custom/tools/printdotscommits.sh", "Misc: Check dots-hyprland commits")
-bind_cmd("SUPER + SHIFT + U", "kitty ~/.config/hypr/custom/tools/updatedots.sh", "Misc: Update dots-hyprland")
-bind_cmd("SUPER + Y", "kitty ~/.config/hypr/custom/tools/archstatusprint.sh", "Misc: Check Archstatus")
-bind_cmd("SUPER + SHIFT + Y", "kitty sh -c 'topgrade && cachy-update'", "Misc: Update system")
+bind("SUPER + Tab", function()
+	local monitor = hl.get_active_monitor()
+	if monitor and (monitor.name == "DP-2" or monitor.name == "HDMI-A-1") then
+		local target = monitor.name == "DP-2" and "HDMI-A-1" or "DP-2"
+		hl.dispatch(hl.dsp.focus({ monitor = target }))
+	end
+end, "Monitor: Toggle focus")
 
 -- =============================================================================
 -- Keybinds: misc
@@ -148,6 +160,10 @@ rebind("SUPER + Z", function()
 		icon = "info",
 	})
 end, "Misc: Toggle visual effects")
+
+-- Window actions from the previous shortcuts.
+bind("SUPER + D", hl.dsp.window.fullscreen({ mode = "maximized", action = "toggle" }), "Window: Maximize")
+bind("SUPER + P", hl.dsp.window.pin(), "Window: Pin")
 
 -- Floating
 rebind("SUPER + ALT + Space", floating.cycle_active)
@@ -210,9 +226,6 @@ bind("SUPER + Semicolon", layout.bind("master", "mfact -0.05"))
 bind("SUPER + Apostrophe", layout.bind("master", "mfact +0.05"))
 bind("SUPER + Space", layout.bind("master", "orientationcycle"))
 
--- Monocle
-bind("ALT + TAB", layout.bind("monocle", "cyclenext"))
-
 -- Scrolling
 bind("SUPER + Period", layout.bind("scrolling", "focus u"))
 bind("SUPER + Comma", layout.bind("scrolling", "focus d"))
@@ -230,9 +243,6 @@ end)
 bind("SUPER + SHIFT + Apostrophe", function()
 	scrolling.resize(50)
 end)
-
-bind("SUPER + SHIFT + BracketLeft", hl.dsp.window.move({ direction = "l" }))
-bind("SUPER + SHIFT + BracketRight", hl.dsp.window.move({ direction = "r" }))
 
 rebind("SUPER + mouse_up", layout.bind("scrolling", "focus u"))
 rebind("SUPER + mouse_down", layout.bind("scrolling", "focus d"))
@@ -276,8 +286,19 @@ fullscreen_kitty_app(
 )
 fullscreen_kitty_app("unimatrix", "unimatrix", "SUPER + SHIFT + Backslash")
 fullscreen_kitty_app("vis", "vis", "CTRL + SUPER + Backslash")
-fullscreen_kitty_app("terminal-rain", "terminal-rain", "CTRL + ALT + Backslash")
 fullscreen_kitty_app("fetch", "fetch", "SUPER + ALT + Return")
 
--- Scrolling overview
-bind("SUPER + Backspace", hl.plugin.scrolloverview.overview("toggle"))
+-- Resolve optional plugin dispatchers at keypress time.
+bind("SUPER + Backspace", function()
+	local plugin = hl.plugin and hl.plugin.scrolloverview
+	if plugin and type(plugin.overview) == "function" then
+		plugin.overview("toggle")
+	end
+end, "Layout: Toggle scrolling overview")
+
+bind("CTRL + SUPER + Z", function()
+	layout.cycle({ "scrolling", "lua:zscroll", "monocle" })
+end, "Layout: Cycle scrolling / zscroll / monocle")
+bind("CTRL + SUPER + SHIFT + Z", function()
+	layout.cycle({ "dwindle", "master" })
+end, "Layout: Cycle dwindle / master")

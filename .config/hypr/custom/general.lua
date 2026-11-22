@@ -8,10 +8,6 @@ local zscroll_options = {
 require("custom.layouts.zscroll").configure(zscroll_options)
 
 hl.config({
-	-- Scrolling
-	general = {
-		layout = "scrolling",
-	},
 	scrolling = {
 		fullscreen_on_one_column = false,
 		column_width = 1,
@@ -26,39 +22,30 @@ hl.config({
 	decoration = {
 		blur = {
 			xray = false,
-			-- Blur translucent menus, leaving their faint shadows unblurred.
+			-- Blur translucent Wayland menus, leaving faint shadows unblurred.
 			popups = true,
 			popups_ignorealpha = 0.2,
 		},
 	},
 	input = {
-		follow_mouse = 0,
 		kb_options = "fkeys:basic_13-24",
 	},
 })
 
--- hl.animation({ leaf = "workspaces", enabled = true, speed = 7, bezier = "menu_decel", style = "slidevert" })
-
--- Window animations
-hl.curve("standard", { type = "bezier", points = { { 0.2, 0 }, { 0, 1 } } })
-hl.animation({ leaf = "windowsIn", enabled = true, speed = 2, bezier = "emphasizedDecel" })
-hl.animation({ leaf = "windowsOut", enabled = true, speed = 2, bezier = "emphasizedAccel" })
-hl.animation({ leaf = "windowsMove", enabled = true, speed = 3.2, bezier = "standard" })
-hl.animation({ leaf = "fadeOut", enabled = true, speed = 1.2, bezier = "emphasizedAccel" })
-
--- Scrollingoverview plugin
-hl.config({
-	plugin = {
-		scrolloverview = {
-			scale = 0.6, -- preferred overview scale
-			workspace_gap = 60,
-			layout = "horizontal", -- vertical or horizontal
-			shadow = {
-				enabled = false,
+-- Plugin settings apply when Hyprland has registered the plugin.
+if hl.plugin and hl.plugin.scrolloverview then
+	hl.config({
+		plugin = {
+			scrolloverview = {
+				scale = 0.6,
+				workspace_gap = 60,
+				layout = "horizontal",
+				shadow = { enabled = false },
 			},
 		},
-	},
-})
+	})
+end
 
--- Machine-specific overrides must be applied last.
-require("custom.pc")
+for i = 1, 20 do
+	hl.workspace_rule({ workspace = tostring(i), monitor = i <= 10 and "DP-2" or "HDMI-A-1", default = true })
+end

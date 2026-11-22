@@ -1,0 +1,83 @@
+#!/usr/bin/env bash
+
+DIR="$HOME/Pictures/ScreenShots"
+timestamp=$(date +%Y-%m-%d-%H%M%S)
+filename="$DIR/Ss-${timestamp}.png"
+
+mkdir -p "$DIR"
+
+get_wm() {
+    if [[ "$XDG_CURRENT_DESKTOP" == *"Hyprland"* ]] || pgrep -x hyprland >/dev/null; then
+        echo "hyprland"
+    elif [[ "$XDG_CURRENT_DESKTOP" == *"niri"* ]] || pgrep -x niri >/dev/null; then
+        echo "niri"
+    else
+        echo "unknown"
+    fi
+}
+
+WM=$(get_wm)
+
+launch_notify() {
+    wl-copy < "$filename"
+    notify-send -a grim -i "$filename" "Screenshot taken" "$filename copied to clipboard"
+}
+
+take_screenshot() {
+    local mode="$1"
+    case "$mode" in
+        "full")
+            grim "$filename" && launch_notify
+            ;;
+        "focused")
+            case "$WM" in
+                "hyprland")
+                    output=$(hyprctl monitors -j | jq -r '.[] | select(.focused) | .name')
+                    ;;
+                "niri")
+                    output=$(niri msg -j outputs | jq -r '.name')
+                    ;;
+                *)
+                    notify-send -u critical "Unsupported compositor for focused screenshot"
+                    exit 1
+                    ;;
+            esac
+            if [[ -n "$output" ]]; then
+                grim -o "$output" "$filename" && launch_notify
+            else
+                notify-send -u critical "No active output detected"
+            fi
+            ;;
+        "select")
+            grim -g "$(slurp)" "$filename" && launch_notify
+            ;;
+    esac
+}
+
+countdown() {
+    for sec in $(seq "$1" -1 1); do
+        notify-send -i camera-photo "Taking screenshot in $sec..."
+        sleep 1
+    done
+}
+
+update_last_screenshot() {
+    local last_img=$(ls -t "$DIR"/*.png 2>/dev/null | head -n 1)
+    if [[ -n "$last_img" ]]; then
+        wl-copy < "$last_img"
+        notify-send -a grim -i camera-photo "Last screenshot copied" "$last_img"
+    else
+        notify-send -a grim -u low "No screenshot found"
+    fi
+}
+
+case "$1" in
+    "-f") take_screenshot "full" ;;
+    "-sf") take_screenshot "focused" ;;
+    "-s") take_screenshot "select" ;;
+    "-in3") countdown 3 && sleep 1 && take_screenshot "full" ;;
+    "-u") update_last_screenshot ;;
+    *)
+        echo "Usage: $0 {-f|-sf|-s|-in3|-u}"
+        ;;
+esac

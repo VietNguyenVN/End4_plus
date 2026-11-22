@@ -1,8 +1,4 @@
--- You can make apps auto-start here
--- Relevant Hyprland wiki section: https://wiki.hyprland.org/Configuring/Keywords/#executing
-
--- Input method and plugins (startup only)
 hl.on("hyprland.start", function()
-	hl.exec_cmd("fcitx5 -d")
+	hl.exec_cmd("pgrep -x fcitx5 >/dev/null || fcitx5 -d")
 	hl.exec_cmd("hyprpm reload -n")
 end)

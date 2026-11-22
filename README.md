@@ -5,6 +5,13 @@ It includes personalized layout tweaks, keybindings, and various utility scripts
 
 https://github.com/user-attachments/assets/49c4bd63-1e22-40dd-95e0-bc4c3e90a520
 
+## end4pC C++ setup
+
+This branch snapshots my PC configuration for the [end4pC C++ shell](https://github.com/pctrade/end4pC-cpp-beta).
+Build or install the shell at `~/.config/end4pC` first. Back up your own dotfiles, then merge the files under `.config/` into `~/.config/`.
+Copy `.local/share/end4pC/config.json` to the shell's data directory to restore the shell settings, and copy the preset if you want it available in Settings.
+The monitor rules are for my DP-2 and HDMI-A-1 outputs. Adjust them for your hardware before reloading Hyprland.
+
 ## Meet zscroll — my own Hyprland layout
 
 **Two windows per row, scrolling vertically.** `zscroll` is my custom Lua layout in this setup. Windows follow a Z order: left to right, then down
