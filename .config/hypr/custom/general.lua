@@ -8,27 +8,12 @@ local zscroll_options = {
 require("custom.layouts.zscroll").configure(zscroll_options)
 
 hl.config({
-	scrolling = {
-		fullscreen_on_one_column = false,
-		column_width = 1,
-		-- explicit_column_widths = "0.5, 1.0",
-		direction = "down",
-	},
-	-- Master
-	master = {
-		new_status = "inherit",
-	},
-	-- Appearance and input
 	decoration = {
 		blur = {
-			xray = false,
 			-- Blur translucent Wayland menus, leaving faint shadows unblurred.
 			popups = true,
 			popups_ignorealpha = 0.2,
 		},
-	},
-	input = {
-		kb_options = "fkeys:basic_13-24",
 	},
 })
 

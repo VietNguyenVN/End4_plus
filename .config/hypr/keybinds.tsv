@@ -24,11 +24,11 @@ Shell	ALT + Tab	shell	switcher next	Window Switcher	r
 Shell	ALT + SHIFT + Tab	shell	switcher prev	Window Switcher (Back)	r	
 Shell	XF86MonBrightnessUp	shell	brightness up	Brightness Up	lr	
 Shell	XF86MonBrightnessDown	shell	brightness down	Brightness Down	lr	
-Apps	SUPER + Return	exec	{terminal}	Terminal	d	
+Apps	SUPER + Return	exec	[float; size 1300 800; center] kitty fish -c 'fastfetch; exec fish'	Terminal with Fastfetch		
 Apps	CTRL + ALT + T	exec	{terminal}	Terminal (alternate)	h	
 Apps	SUPER + E	exec	{fileManager}	File manager		
-Apps	SUPER + C	exec	{codeEditor}	Code editor	d	
-Apps	SUPER + X	exec	{textEditor}	Text editor	d	
+Apps	SUPER + C	exec	kitty codex	Codex		
+Apps	SUPER + X	exec	kitty nvim	Neovim		
 Apps	CTRL + SUPER + V	exec	{volumeMixer}	Volume mixer		
 Apps	SUPER + I	exec	{settingsApp}	Settings app		
 Apps	CTRL + SHIFT + Escape	shell	tasks	Task manager		
@@ -112,3 +112,20 @@ Session	SUPER + L	exec	{lock}	Lock Screen	d
 Session	SUPER + CTRL + L	exec	{lock}	Lock Screen (alternate)	h	
 Session	SUPER + SHIFT + L	exec	systemctl suspend || loginctl suspend	Suspend system	l	
 Session	CTRL + SHIFT + ALT + SUPER + Delete	exec	systemctl poweroff || loginctl poweroff	Shutdown	h	
+
+# Personal commands moved from custom/keybinds.lua.
+Session	SUPER + ALT + L	exec	loginctl lock-session	Lock session		
+Shell	CTRL + ALT + Backspace	shell	power toggle	Power Menu (alternate)		
+Windows	SUPER + SHIFT + Q	exec	pid=$(hyprctl activewindow -j | jq -er '.pid | select(type == "number" and . > 1 and . == floor)') && kill -KILL "$pid"	Force quit focused app		
+Apps	SUPER + SHIFT + E	exec	[float; size 1300 800; center] dolphin	Floating file manager		
+Apps	SUPER + ALT + C	exec	chatgpt	ChatGPT		
+Apps	SUPER + SHIFT + T	exec	[float; size 1300 800; center] kitty	Floating terminal		
+Apps	SUPER + SHIFT + I	exec	okular	Okular		
+Shell	SUPER + ALT + D	shell	dock toggle	Toggle dock		
+Shell	SUPER + ALT + K	shell	clock toggle	Toggle desktop clock		
+Apps	SUPER + ALT + P	exec	papers	Document Viewer		
+Misc	SUPER + U	exec	kitty env DOTS_COMMIT_OWNER=pctrade DOTS_COMMIT_REPO=end4pC-cpp-beta ~/.config/hypr/custom/tools/printdotscommits.sh	View end4pC commits		
+Misc	SUPER + SHIFT + U	exec	kitty fish --no-config "$HOME/.config/hypr/custom/tools/update-end4pc.fish"	Update end4pC		
+Misc	SUPER + Y	exec	kitty ~/.config/hypr/custom/tools/archstatusprint.sh	Arch service status		
+Misc	SUPER + SHIFT + Y	exec	kitty sh -c 'topgrade && cachy-update'	Update system		
+Windows	SUPER + D	fullscreen	maximized	Maximize		

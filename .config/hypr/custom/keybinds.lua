@@ -22,10 +22,6 @@ local function rebind(key, action, description)
 	bind(key, action, description)
 end
 
-local function rebind_cmd(key, command, description)
-	rebind(key, hl.dsp.exec_cmd(command), description)
-end
-
 local function bind_cmd(key, command, description)
 	bind(key, hl.dsp.exec_cmd(command), description)
 end
@@ -40,16 +36,12 @@ end
 -- Keybinds: system / session
 -- =============================================================================
 
-bind_cmd("SUPER + ALT + L", "loginctl lock-session", "Session: Lock")
-bind_cmd("CTRL + ALT + Backspace", 'end4pC "power toggle"', "Session: Power menu")
-bind_cmd("SUPER + SHIFT + Q", [[pid=$(hyprctl activewindow -j | jq -er '.pid | select(type == "number" and . > 1 and . == floor)') && kill -KILL "$pid"]], "Window: Force quit focused app")
 rebind("SUPER + ALT + H", desktop.toggle)
 
 -- =============================================================================
 -- Keybinds: apps
 -- =============================================================================
 
-bind_cmd("SUPER + SHIFT + E", "[float; size 1300 800; center] dolphin")
 rebind("SUPER + W", apps.focus_or_launch_firefox(false), "App: Browser")
 rebind("SUPER + SHIFT + W", apps.focus_or_launch_firefox(true))
 rebind(
@@ -60,12 +52,6 @@ rebind(
 	}, "obsidian"),
 	"App: Obsidian"
 )
-rebind_cmd("SUPER + X", "kitty nvim", "App: Neovim")
-rebind_cmd("SUPER + C", "kitty codex", "App: Codex")
-bind_cmd("SUPER + ALT + C", "chatgpt")
-rebind_cmd("SUPER + SHIFT + T", "[float; size 1300 800; center] kitty")
-rebind_cmd("SUPER + Return", "[float; size 1300 800; center] kitty fish -c 'fastfetch; exec fish'", "App: Terminal")
-bind_cmd("SUPER + SHIFT + I", "okular", "App: Okular")
 
 -- Special workspace toggles
 rebind(
@@ -115,15 +101,8 @@ end
 -- Keybinds: shell
 -- =============================================================================
 
-bind_cmd("SUPER + ALT + D", 'end4pC "dock toggle"', "Shell: Toggle dock")
-bind_cmd("SUPER + ALT + K", 'end4pC "clock toggle"', "Shell: Toggle desktop clock")
-bind_cmd("SUPER + ALT + P", "papers", "App: Document Viewer")
 
 -- Keep the PC maintenance shortcuts on their original chords.
-bind_cmd("SUPER + U", "kitty env DOTS_COMMIT_OWNER=pctrade DOTS_COMMIT_REPO=end4pC-cpp-beta ~/.config/hypr/custom/tools/printdotscommits.sh", "Maintenance: View end4pC commits")
-bind_cmd("SUPER + SHIFT + U", "kitty end4pC update", "Maintenance: Update end4pC")
-bind_cmd("SUPER + Y", "kitty ~/.config/hypr/custom/tools/archstatusprint.sh", "Maintenance: Arch service status")
-bind_cmd("SUPER + SHIFT + Y", "kitty sh -c 'topgrade && cachy-update'", "Maintenance: Update system")
 
 bind("SUPER + Tab", function()
 	local monitor = hl.get_active_monitor()
@@ -161,8 +140,6 @@ rebind("SUPER + Z", function()
 	})
 end, "Misc: Toggle visual effects")
 
--- Window actions from the previous shortcuts.
-bind("SUPER + D", hl.dsp.window.fullscreen({ mode = "maximized", action = "toggle" }), "Window: Maximize")
 bind("SUPER + P", hl.dsp.window.pin(), "Window: Pin")
 
 -- Floating
@@ -184,9 +161,6 @@ end, "Misc: Increase gaps_in")
 bind("SUPER + CTRL + Minus", function()
 	display.adjust_gaps_in(-1)
 end, "Misc: Decrease gaps_in")
-
--- Misc
--- rebind_cmd("ALT + Z", "~/.local/bin/drag-macro run")
 
 -- =============================================================================
 -- Keybinds: layout cycling

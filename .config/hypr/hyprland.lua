@@ -32,6 +32,3 @@ require("monitors")
 -- Shell overrides --
 require("hyprland/shellOverrides/main")
 require("custom/animations")
-
--- Personal layout default, applied after the shell-managed settings.
-hl.config({ general = { layout = "scrolling" } })
