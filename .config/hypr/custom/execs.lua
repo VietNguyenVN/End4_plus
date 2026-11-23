@@ -1,0 +1,2 @@
+-- Personal startup commands are managed by end4pC Tools > Autostart.
+-- Keep this file so the standard Hyprland loader can require it.

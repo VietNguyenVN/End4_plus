@@ -13,6 +13,7 @@ require("hyprland/colors")
 require("hyprland/keybinds")
 
 -- Custom --
+require("custom/execs")
 require("custom/general")
 require("custom/rules")
 require("custom/keybinds")
