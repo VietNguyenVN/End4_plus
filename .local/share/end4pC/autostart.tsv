@@ -1,0 +1,3 @@
+# end4pC autostart: enabled, workspace (0 = any), name, icon, command (Tools > Autostart edits this file)
+1	0	Hyprland plugins		hyprpm reload -n
+1	0	Fcitx5	fcitx	pgrep -x fcitx5 >/dev/null || fcitx5 -d
