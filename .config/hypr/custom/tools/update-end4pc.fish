@@ -1,12 +1,14 @@
 #!/usr/bin/env fish
 
 set -l repo "$HOME/.config/end4pC"
+set -l commit_before (git -C "$repo" rev-parse --verify --quiet HEAD)
 set -l stash_before (git -C "$repo" rev-parse --verify --quiet refs/stash)
 
 "$repo/build/end4pC" update
 set -l update_status $status
 
 if test $update_status -eq 0
+    set -l commit_after (git -C "$repo" rev-parse --verify --quiet HEAD)
     set -l stash_after (git -C "$repo" rev-parse --verify --quiet refs/stash)
     set -l stash_subject (git -C "$repo" log -g -1 --format=%gs refs/stash 2>/dev/null)
     if test -n "$stash_after"; and test "$stash_after" != "$stash_before"; and string match -q '*: end4pC update *' -- "$stash_subject"
@@ -24,6 +26,20 @@ if test $update_status -eq 0
                 end
             case '*'
                 printf 'Local changes left in the stash.\n'
+        end
+    end
+    if test -n "$commit_after"; and test "$commit_after" != "$commit_before"
+        printf '\n'
+        read --local --prompt-str 'Restart end4pC to load the update now? [y/N] ' restart_answer
+        if string match --quiet --ignore-case --regex '^y(es)?$' -- "$restart_answer"
+            "$repo/build/end4pC" restart
+            set -l restart_status $status
+            if test $restart_status -ne 0
+                printf 'The shell restart exited with status %d.\n' $restart_status
+                if test $update_status -eq 0
+                    set update_status $restart_status
+                end
+            end
         end
     end
 else

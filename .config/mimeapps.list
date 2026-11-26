@@ -47,3 +47,4 @@ text/x-script.python=nvim.desktop;
 text/x-shellscript=nvim.desktop;
 application/x-shellscript=nvim.desktop;
 inode/directory=org.kde.dolphin.desktop;
+x-scheme-handler/fdm=freedownloadmanager_fdm_up.desktop
