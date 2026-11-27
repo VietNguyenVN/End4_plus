@@ -31,6 +31,6 @@ if hl.plugin and hl.plugin.scrolloverview then
 	})
 end
 
-for i = 1, 20 do
-	hl.workspace_rule({ workspace = tostring(i), monitor = i <= 10 and "DP-2" or "HDMI-A-1", default = true })
+for i = 1, 10 do
+	hl.workspace_rule({ workspace = tostring(i), monitor = i <= 5 and "DP-2" or "HDMI-A-1", default = true })
 end
