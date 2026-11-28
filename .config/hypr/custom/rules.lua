@@ -39,4 +39,16 @@ for _, rule in ipairs(window_rules) do
 	hl.window_rule(rule)
 end
 
+-- These shell windows draw 36px circular corners into their own surfaces.
+-- Apply the same shape to the compositor blur after the shell's rules load.
+hl.on("config.reloaded", function()
+	hl.window_rule({
+		name = "personal-tools-blur",
+		match = { class = "^end4pC-(tools|tasks)$" },
+		no_blur = false,
+		rounding = 36,
+		rounding_power = 2,
+	})
+end)
+
 require("custom.actions.display").restore_gaps()
