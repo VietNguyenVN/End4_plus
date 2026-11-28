@@ -13,6 +13,7 @@ hl.config({
 			-- Blur translucent Wayland menus, leaving faint shadows unblurred.
 			popups = true,
 			popups_ignorealpha = 0.2,
+			vibrancy_darkness = 0.5,
 		},
 	},
 })

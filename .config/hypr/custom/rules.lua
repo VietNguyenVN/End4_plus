@@ -1,4 +1,9 @@
 local window_rules = {
+	{
+		match = { class = ".*" },
+		opacity = "0.89 override 0.89 override",
+		no_blur = false,
+	},
 	-- Keep Document Viewer mostly opaque.
 	{
 		match = { class = "org\\.gnome\\.Papers" },
