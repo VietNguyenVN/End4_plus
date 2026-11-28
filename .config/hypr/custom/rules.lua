@@ -33,6 +33,11 @@ local window_rules = {
 		workspace = "special:spotify",
 		tag = "zscroll-full",
 	},
+	{
+		match = { class = "^end4pC-play3r$" },
+		workspace = "special:play3r",
+		tag = "zscroll-full",
+	},
 }
 
 for _, rule in ipairs(window_rules) do
@@ -43,8 +48,8 @@ end
 -- Apply the same shape to the compositor blur after the shell's rules load.
 hl.on("config.reloaded", function()
 	hl.window_rule({
-		name = "personal-tools-blur",
-		match = { class = "^end4pC-(tools|tasks)$" },
+		name = "personal-shell-app-blur",
+		match = { class = "^end4pC-(tools|tasks|settings)$" },
 		no_blur = false,
 		rounding = 36,
 		rounding_power = 2,

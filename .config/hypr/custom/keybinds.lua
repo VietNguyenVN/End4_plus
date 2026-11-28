@@ -76,6 +76,17 @@ rebind(
 	"App: Spotify"
 )
 
+bind(
+	"SUPER + ALT + M",
+	apps.toggle_special_app({
+		workspace = "special:play3r",
+		monitor = "HDMI-A-1",
+		command = "$HOME/.config/end4pC/build/end4pC-play3r",
+		class = "end4pC-play3r",
+	}),
+	"App: Play3r"
+)
+
 -- Fcitx5
 bind("SUPER + Backslash", apps.toggle_fcitx5, "App: Toggle fcitx5")
 

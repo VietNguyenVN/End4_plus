@@ -26,7 +26,7 @@ Shell	XF86MonBrightnessUp	shell	brightness up	Brightness Up	lr
 Shell	XF86MonBrightnessDown	shell	brightness down	Brightness Down	lr	
 Apps	SUPER + Return	exec	[float; size 1300 800; center] kitty fish -c 'fastfetch; exec fish'	Terminal with Fastfetch		
 Apps	CTRL + ALT + T	exec	{terminal}	Terminal (alternate)	h	
-Apps	SUPER + E	exec	{fileManager}	File manager		
+Apps	SUPER + E	shell	fil3s	Fil3s		
 Apps	SUPER + C	exec	kitty codex	Codex		
 Apps	SUPER + X	exec	kitty nvim	Neovim		
 Apps	CTRL + SUPER + V	exec	{volumeMixer}	Volume mixer		
@@ -47,7 +47,7 @@ Media & Volume	XF86AudioRaiseVolume	exec	wpctl set-volume @DEFAULT_AUDIO_SINK@ 2
 Media & Volume	XF86AudioLowerVolume	exec	wpctl set-volume @DEFAULT_AUDIO_SINK@ 2%-	Volume down	lr	
 Media & Volume	XF86AudioMute	exec	wpctl set-mute @DEFAULT_SINK@ toggle	Toggle mute	l	
 Media & Volume	SUPER + SHIFT + M	exec	wpctl set-mute @DEFAULT_SINK@ toggle	Toggle mute	l	
-Media & Volume	SUPER + ALT + M	exec	wpctl set-mute @DEFAULT_SOURCE@ toggle	Toggle mic	l	
+Media & Volume	SUPER + ALT + M	exec	wpctl set-mute @DEFAULT_SOURCE@ toggle	Toggle mic	ld	
 Media & Volume	XF86AudioMicMute	exec	wpctl set-mute @DEFAULT_SOURCE@ toggle	Toggle mic (key)	lh	
 Media & Volume	ALT + XF86AudioMute	exec	wpctl set-mute @DEFAULT_SOURCE@ toggle	Toggle mic (alternate)	lh	
 Media & Volume	CTRL + SUPER + SHIFT + mouse_up	exec	wpctl set-volume @DEFAULT_AUDIO_SINK@ 2%+ -l 1.5	Volume up (scroll)		
@@ -117,7 +117,7 @@ Session	CTRL + SHIFT + ALT + SUPER + Delete	exec	systemctl poweroff || loginctl 
 Session	SUPER + ALT + L	exec	loginctl lock-session	Lock session		
 Shell	CTRL + ALT + Backspace	shell	power toggle	Power Menu (alternate)		
 Windows	SUPER + SHIFT + Q	exec	pid=$(hyprctl activewindow -j | jq -er '.pid | select(type == "number" and . > 1 and . == floor)') && kill -KILL "$pid"	Force quit focused app		
-Apps	SUPER + SHIFT + E	exec	[float; size 1300 800; center] dolphin	Floating file manager		
+Apps	SUPER + SHIFT + E	exec	[float; size 1300 800; center] $HOME/.config/end4pC/build/end4pC-fil3s	Floating Fil3s		
 Apps	SUPER + ALT + C	exec	chatgpt	ChatGPT		
 Apps	SUPER + SHIFT + T	exec	[float; size 1300 800; center] kitty	Floating terminal		
 Apps	SUPER + SHIFT + I	exec	okular	Okular		

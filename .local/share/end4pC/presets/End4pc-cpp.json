@@ -37,7 +37,7 @@
   "mediaPopupPosition": "widget",
   "mediaClickPopupPosition": "widget",
   "mediaAlways": 1,
-  "privacyAlways": 1,
+  "privacyAlways": 0,
   "privacyMic": 1,
   "privacyCam": 1,
   "privacyScreen": 1,
@@ -78,6 +78,8 @@
   "wallpaperAutoMin": 30,
   "selectorShape": "Cookie9Sided",
   "notificationShape": "Cookie9Sided",
+  "scoreOdds": "",
+  "scoreSite": "",
   "weatherTheme": 1,
   "materialIcons": 0,
   "iconScale": 100,
@@ -115,6 +117,8 @@
   "clockStyle": "digital",
   "theme": "",
   "quickActions": "perfprofile",
+  "hiddenToolsTabs": "converter,video,units,autostart,phone",
+  "toolsTabOrder": "keybinds,notes,freeform,timers,stopwatch,reminders,translator,autostart,converter,video,units,phone,score",
   "cookieSides": 13,
   "cookieTime": 0,
   "cookieDial": "numbers",
@@ -127,9 +131,10 @@
   "themeTertiary": "pink",
   "clockDaily": "badge",
   "clockPixel": "horizontal",
+  "hotCornerActions": "HDMI-A-1/cornerTL=none,HDMI-A-1/cornerTR=overview",
   "cornerTL": "launcher",
-  "cornerTR": "none",
-  "cornerBL": "overview",
+  "cornerTR": "overview",
+  "cornerBL": "none",
   "cornerBR": "none",
   "customImagePath": "/home/vietnguyenx/Pictures/Wallpapers/0246.png",
   "layout": {
@@ -191,10 +196,12 @@
       "divider"
     ]
   },
+  "displayName": "",
   "accent": "",
   "widgetsLocked": 1,
   "widgetShadow": 1,
   "widgetGap": 12,
+  "widgetGrid": 0,
   "deskVizStyle": "ring",
   "deskVizPos": "bottom",
   "deskVizColor": "gradient",
@@ -297,8 +304,8 @@
     "clock": {
       "enabled": 1,
       "size": [
-        262,
-        196
+        292,
+        120
       ],
       "pos": [
         225,
@@ -332,6 +339,6 @@
     "description": "",
     "wallpaper": "/home/vietnguyenx/Pictures/Wallpapers/0279.jpg",
     "video": "",
-    "saved": 1795608612
+    "saved": 1795839997
   }
 }
